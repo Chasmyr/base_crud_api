@@ -13,19 +13,38 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   email String @unique
-  name String?
+  firstName String
+  lastName String
   password String
   salt String
-  products Product[]
+  bankAccounts BankAccount[]
 }
 
-model Product {
+model BankAccount {
   id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title String @db.VarChar(255)
-  content String?
-  price Float
+  balance Float
+  overdraft Int
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
+  creditCards CreditCard[]
+}
+
+model CreditCard {
+  id Int @id @default(autoincrement())
+  creditCardNumber String
+  expiration String
+  cvv Int
+  accountLinked BankAccount @relation(fields: [accountId], references: [id])
+  accountId Int
+  transactions Transaction[]
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+  payeeName String 
+  payeeId String
+  amount Float
+  createdAt DateTime @default(now())
+  creditCard CreditCard @relation(fields: [creditCardId], references: [id])
+  creditCardId Int
 }
