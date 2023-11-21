@@ -1,0 +1,50 @@
+version: "3.7"
+
+services:
+  back-product:
+    build:
+      context: ./
+      dockerfile: Dockerfile-back-product
+    env_file:
+      - .env
+    ports:
+      - "4001:4001"
+    depends_on:
+      - db-product
+
+  db-product:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASEPRODUCT}
+    volumes:
+      - ./:/data/db_product
+    ports:
+      - "5001:5001"
+
+  # back-bank:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile-back-bank
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "4002:4002"
+  #   depends_on:
+  #     - db-bank
+
+  # db-bank:
+  #   image: postgres:latest
+  #   environment:
+  #     POSTGRES_USER: ${PGUSER}
+  #     POSTGRES_PASSWORD: ${PGPASSWORD}
+  #     POSTGRES_DB: ${PGDATABASEBANK}
+  #   volumes:
+  #     - ./:/data/db_bank
+  #   ports:
+  #     - "5002:5002"
+
+networks:
+  postgres:
+    driver: bridge
