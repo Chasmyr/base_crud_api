@@ -1,27 +1,13 @@
 FROM node:18-alpine
 
-WORKDIR /app
-
-COPY package.json .
-
-## Initialise prisma
-RUN npx prisma init --datasource-provider postgresql
-
-### Migrate the schema
-RUN npx prisma migrate dev --name init
-
-RUN yarn install
-
-COPY . .
-
-EXPOSE 8081
-
-CMD [ "yarn", "run", "preview" ]
-FROM node:18-alpine
+RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache bash
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
+
+RUN npm install
 
 COPY prisma ./prisma/
 
@@ -31,11 +17,10 @@ COPY tsconfig.json ./
 
 COPY . .
 
-RUN npm install
-
+# Generate prisma client
 RUN npx prisma generate
 
-### Migrate the schema
-EXPOSE 8080
+EXPOSE 4002
 
-CMD [ "yarn", "dev" ]
+# defined command to execute app
+CMD ["yarn", "dev"]

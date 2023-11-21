@@ -11,6 +11,7 @@ services:
       - "4001:4001"
     depends_on:
       - db-product
+    command: /app/entrypoint.sh
 
   db-product:
     image: postgres:latest
@@ -21,30 +22,31 @@ services:
     volumes:
       - ./:/data/db_product
     ports:
-      - "5001:5001"
+      - "5001:5432"
 
-  # back-bank:
-  #   build:
-  #     context: ./
-  #     dockerfile: Dockerfile-back-bank
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "4002:4002"
-  #   depends_on:
-  #     - db-bank
+  back-bank:
+    build:
+      context: ./
+      dockerfile: Dockerfile-back-bank
+    env_file:
+      - .env
+    ports:
+      - "4002:4002"
+    depends_on:
+      - db-bank
+    command: /app/entrypoint.sh
 
-  # db-bank:
-  #   image: postgres:latest
-  #   environment:
-  #     POSTGRES_USER: ${PGUSER}
-  #     POSTGRES_PASSWORD: ${PGPASSWORD}
-  #     POSTGRES_DB: ${PGDATABASEBANK}
-  #   volumes:
-  #     - ./:/data/db_bank
-  #   ports:
-  #     - "5002:5002"
+  db-bank:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASEBANK}
+    volumes:
+      - ./:/data/db_bank
+    ports:
+      - "5002:5432"
 
-networks:
-  postgres:
-    driver: bridge
+# networks:
+#   postgres:
+#     driver: bridge
