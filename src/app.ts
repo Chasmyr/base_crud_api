@@ -1,8 +1,6 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import userRoutes from "./modules/user/user.route";
 import { userSchemas } from './modules/user/user.schema'
-import { productSchemas } from "./modules/product/product.schema";
-import productRoutes from "./modules/product/product.route";
 
 export const server = Fastify()
 
@@ -39,12 +37,11 @@ server.get('/healthcheck', async function() {
 })
 
 async function main() {
-    for (const schema of [...userSchemas, ...productSchemas]){
+    for (const schema of [...userSchemas,]){
         server.addSchema(schema)
     }
 
     server.register(userRoutes, {prefix: 'api/users'})
-    server.register(productRoutes, {prefix: 'api/products'})
     
     try {
         await server.listen(4001, '0.0.0.0')
