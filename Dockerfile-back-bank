@@ -9,7 +9,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY prisma ./prisma/
+COPY prisma_bank ./prisma_bank/
 
 COPY .env ./
 

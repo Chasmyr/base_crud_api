@@ -11,7 +11,7 @@ services:
       - "4001:4001"
     depends_on:
       - db-product
-    command: /app/entrypoint.sh
+    command: /app/entrypoint_product.sh
 
   db-product:
     image: postgres:latest
@@ -34,7 +34,7 @@ services:
       - "4002:4002"
     depends_on:
       - db-bank
-    command: /app/entrypoint.sh
+    command: /app/entrypoint_bank.sh
 
   db-bank:
     image: postgres:latest

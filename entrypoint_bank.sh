@@ -22,8 +22,8 @@ echo "Migration starting!"
 echo ----------------------------------
 
 # Run Prisma migrations
-if npx prisma migrate dev --name init; then
-  echo "Migrations applied successfully."
+if npx prisma migrate dev --name init --schema=prisma_bank/schema.prisma; then
+  echo "Bank migrations applied successfully."
 else
   echo "Error applying migrations."
   exit 1
