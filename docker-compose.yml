@@ -3,17 +3,17 @@ version: "3.7"
 services:
   back-product:
     build:
-      context: ./product_api
+      context: ./
       dockerfile: Dockerfile-back-product
     env_file:
       - .env
     ports:
-      - 4001:4001
+      - "4001:4001"
     depends_on:
       - db-product
-    command: entrypoint_product.sh
+    command: /app/entrypoint_product.sh
 
-  postgres:
+  db-product:
     image: postgres:latest
     environment:
       POSTGRES_USER: ${PGUSER}
@@ -26,7 +26,7 @@ services:
 
   back-bank:
     build:
-      context: ./bank_api
+      context: ./
       dockerfile: Dockerfile-back-bank
     env_file:
       - .env
@@ -34,7 +34,7 @@ services:
       - "4002:4002"
     depends_on:
       - db-bank
-    command: entrypoint_bank.sh
+    command: /app/entrypoint_bank.sh
 
   db-bank:
     image: postgres:latest
