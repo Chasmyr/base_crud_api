@@ -21,6 +21,3 @@ COPY . .
 RUN npx prisma generate
 
 EXPOSE 4002
-
-# defined command to execute app
-CMD ["yarn", "dev"]
