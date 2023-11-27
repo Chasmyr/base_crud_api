@@ -13,9 +13,17 @@ export const createCart = async (userId: number) => {
   
   // Add product to Cart
   export const addToCart = async (cartId: number, productId: number) => {
+    let cart = await prisma.cart.findUnique({
+      where: { userId },
+    });
+  
+    if (!cart) {
+      cart = await createCart(userId);
+    }
+  
     return prisma.cartItem.create({
       data: {
-        cartId,
+        cartId: cart.id,
         productId,
       },
     });
@@ -32,3 +40,12 @@ export const createCart = async (userId: number) => {
       },
     });
   };
+
+  // Check if user have already a Cart
+  export const findCartByUserId = async (userId: number) => {
+    return prisma.cart.findFirst({
+        where: {
+            userId: userId,
+        },
+    });
+};

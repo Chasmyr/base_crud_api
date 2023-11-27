@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createCart, getCarts } from "./cart.service";
+import { createCart, getCarts as getCart } from "./cart.service";
 import { CreateCartInput } from "./cart.schema";
 
 export async function createCartHandler(request: FastifyRequest<{
@@ -15,8 +15,8 @@ export async function createCartHandler(request: FastifyRequest<{
 }
 
 export async function getCartsHandler() {
-    const carts = await getCarts()
+    const cart = await getCart()
 
-    return carts
+    return cart
 }
 

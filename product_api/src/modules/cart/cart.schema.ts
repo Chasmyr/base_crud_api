@@ -2,9 +2,8 @@ import {z} from 'zod'
 import {buildJsonSchemas} from 'fastify-zod'
 
 const cartInput = {
-    title: z.string(),
-    price: z.number(),
-    content: z.string().optional()
+    userId: z.number(),
+    status: z.boolean().optional()
 }
 
 const cartGenerated = {

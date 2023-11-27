@@ -26,7 +26,7 @@ model Product {
   title      String    @db.VarChar(255)
   content    String?
   price      Float
-  cart       Cart @relation(fields: [cartID], references: [id])
+  cart       Cart      @relation(fields: [cartId], references: [id])
   cartId     Int
 }
 
