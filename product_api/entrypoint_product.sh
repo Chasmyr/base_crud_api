@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd /app
-
 echo ----------------------------------
 echo "Waiting Database "
 echo ----------------------------------
