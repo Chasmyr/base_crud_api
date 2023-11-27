@@ -27,7 +27,8 @@ export async function findUsers() {
     return prisma.user.findMany({
         select: {
             email: true,
-            name: true,
+            firstName: true,
+            lastName: true,
             id: true
         }
     });

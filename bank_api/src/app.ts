@@ -1,6 +1,8 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import userRoutes from "./modules/user/user.route";
 import { userSchemas } from './modules/user/user.schema'
+import { bankAccountSchemas } from "./modules/bankAccount/bankAccount.schema";
+import bankAccountRoutes from "./modules/bankAccount/bankAccount.route";
 
 export const server = Fastify()
 
@@ -14,7 +16,8 @@ declare module "fastify-jwt" {
     interface FastifyJWT {
         user: {
             "email": string,
-            "name": string,
+            "firstName": string,
+            "lastName": string,
             "id": number
         }
     }
@@ -37,11 +40,12 @@ server.get('/healthcheck', async function() {
 })
 
 async function main() {
-    for (const schema of [...userSchemas,]){
+    for (const schema of [...userSchemas, ...bankAccountSchemas]){
         server.addSchema(schema)
     }
 
     server.register(userRoutes, {prefix: 'api/users'})
+    server.register(bankAccountRoutes, {prefix: 'api/bank'})
     
     try {
         await server.listen(4002, '0.0.0.0')
