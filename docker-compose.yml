@@ -6,7 +6,7 @@ services:
       context: ./product_api
       dockerfile: Dockerfile-back-product
     env_file:
-      - .env
+      - ./.env
     ports:
       - "4001:4001"
     depends_on:
