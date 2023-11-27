@@ -47,8 +47,8 @@ async function main() {
     server.register(productRoutes, {prefix: 'api/products'})
     
     try {
-        await server.listen(3000, '0.0.0.0')
-        console.log('serve rdy at http://localhost:3000')
+        await server.listen(4001, '0.0.0.0')
+        console.log('serve rdy at http://localhost:4001')
     }catch(e) {
         console.error(e)
         process.exit(1)

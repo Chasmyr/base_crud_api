@@ -3,7 +3,7 @@ version: "3.7"
 services:
   back-product:
     build:
-      context: ./
+      context: ./product_api
       dockerfile: Dockerfile-back-product
     env_file:
       - .env
@@ -11,7 +11,7 @@ services:
       - "4001:4001"
     depends_on:
       - db-product
-    command: /app/entrypoint_product.sh
+    command: entrypoint_product.sh
 
   db-product:
     image: postgres:latest
@@ -26,7 +26,7 @@ services:
 
   back-bank:
     build:
-      context: ./
+      context: ./bank_api
       dockerfile: Dockerfile-back-bank
     env_file:
       - .env
@@ -34,7 +34,7 @@ services:
       - "4002:4002"
     depends_on:
       - db-bank
-    command: /app/entrypoint_bank.sh
+    command: entrypoint_bank.sh
 
   db-bank:
     image: postgres:latest

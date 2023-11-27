@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 cd /app
 
-echo ----------------------------------
+echo "----------------------------------"
 echo "Waiting Database "
-echo ----------------------------------
+echo ""----------------------------------""
 
 # Wait for the database to be ready
 while ! pg_isready -h $PGHOST -p $PGPORT -q -U $PGUSER
@@ -13,13 +13,13 @@ do
   sleep 1
 done
 
-echo ----------------------------------
+echo "----------------------------------"
 echo "Database is ready!"
-echo ----------------------------------
+echo "----------------------------------"
 
-echo ----------------------------------
+echo "----------------------------------"
 echo "Migration starting!"
-echo ----------------------------------
+echo "----------------------------------"
 
 # Run Prisma migrations
 if npx prisma migrate dev --name init --schema=prisma_bank/schema.prisma; then
@@ -30,12 +30,12 @@ else
 fi
 
 
-echo ----------------------------------
+echo "----------------------------------"
 echo "Server is starting..."
-echo ----------------------------------
+echo "----------------------------------"
 
 yarn dev
 
-echo ----------------------------------
+echo "----------------------------------"
 echo "Server started!"
-echo ----------------------------------
+echo "----------------------------------"
