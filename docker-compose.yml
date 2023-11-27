@@ -8,12 +8,12 @@ services:
     env_file:
       - .env
     ports:
-      - "4001:4001"
+      - 4001:4001
     depends_on:
       - db-product
     command: entrypoint_product.sh
 
-  db-product:
+  postgres:
     image: postgres:latest
     environment:
       POSTGRES_USER: ${PGUSER}
