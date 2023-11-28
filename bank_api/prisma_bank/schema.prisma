@@ -35,6 +35,8 @@ model CreditCard {
   creditCardNumber String
   expiration String
   cvv Int
+  token String
+  isActive Boolean @default(false)
   accountLinked BankAccount @relation(fields: [accountId], references: [id])
   accountId Int
   transactions Transaction[]
