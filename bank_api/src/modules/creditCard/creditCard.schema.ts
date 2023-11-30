@@ -1,31 +1,43 @@
 import {z} from 'zod'
 import {buildJsonSchemas} from 'fastify-zod'
 
-const creditCardInput = {
-    expiration: z.string()
-}
+const createCreditCardSchema = z.object({
+    expiration: z.string({
+        required_error: 'Expiration date is required',
+    }),
+    accountId: z.number({
+        required_error: 'Account id is required',
+    })
+})
 
-const productGenerated = {
+const createCreditCardResponseSchema = z.object({
     id: z.number(),
-    createdAt: z.string(),
-    updatedAt: z.string()
-}
-
-const createProductSchema = z.object({
-    ...productInput,
+    creditCardNumer: z.string(), 
+    expiration: z.string(),
+    cvv: z.number()
 })
 
-const productResponseSchema = z.object({
-    ...productInput,
-    ...productGenerated,
+const creditCardAuthSchema = z.object({
+    id: z.number({
+        required_error: 'Credit card id is required',
+    })
 })
 
-const productsResponseSchema = z.array(productResponseSchema)
+const creditCardAuthResponseSchema = z.object({
+    id: z.number(),
+    isActive: z.boolean(),
+    token: z.string()
+})
 
-export type CreateProductInput = z.infer<typeof createProductSchema>
+const creditCardsResponseSchema = z.array(createCreditCardResponseSchema)
 
-export const {schemas: productSchemas, $ref} = buildJsonSchemas({
-    createProductSchema,
-    productResponseSchema,
-    productsResponseSchema
-}, { $id: 'ProductSchema'})
+export type CreateCreditCardInput = z.infer<typeof createCreditCardSchema>
+export type AuthCreditCardInput = z.infer<typeof creditCardAuthSchema>
+
+export const {schemas: creditCardSchemas, $ref} = buildJsonSchemas({
+    createCreditCardSchema,
+    createCreditCardResponseSchema,
+    creditCardAuthSchema,
+    creditCardAuthResponseSchema,
+    creditCardsResponseSchema
+}, { $id: 'CreditCardSchemas'})

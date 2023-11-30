@@ -3,6 +3,10 @@ import userRoutes from "./modules/user/user.route";
 import { userSchemas } from './modules/user/user.schema'
 import { bankAccountSchemas } from "./modules/bankAccount/bankAccount.schema";
 import bankAccountRoutes from "./modules/bankAccount/bankAccount.route";
+import creditCardRoutes from "./modules/creditCard/creditCard.route";
+import { creditCardSchemas } from "./modules/creditCard/creditCard.schema";
+import { transactionSchemas } from "./modules/transaction/transaction.schema";
+import transactionRoutes from "./modules/transaction/transaction.route";
 
 export const server = Fastify()
 
@@ -40,12 +44,14 @@ server.get('/healthcheck', async function() {
 })
 
 async function main() {
-    for (const schema of [...userSchemas, ...bankAccountSchemas]){
+    for (const schema of [...userSchemas, ...bankAccountSchemas, ...creditCardSchemas, transactionSchemas]){
         server.addSchema(schema)
     }
 
     server.register(userRoutes, {prefix: 'api/users'})
-    server.register(bankAccountRoutes, {prefix: 'api/bank'})
+    server.register(bankAccountRoutes, {prefix: 'api/bankaccounts'})
+    server.register(creditCardRoutes, {prefix: 'api/creditcards'})
+    server.register(transactionRoutes, {prefix: 'api/transactions'})
     
     try {
         await server.listen(4002, '0.0.0.0')

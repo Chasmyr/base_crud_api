@@ -2,8 +2,12 @@ import {z} from 'zod'
 import {buildJsonSchemas} from 'fastify-zod'
 
 const bankAccountInput = {
-    balance: z.number(),
-    overdraft: z.number()
+    balance: z.number({
+        required_error: 'Balance number is required',
+    }),
+    overdraft: z.number({
+        required_error: 'Overdraft number is required',
+    })
 }
 
 const createBankAccountSchema = z.object({

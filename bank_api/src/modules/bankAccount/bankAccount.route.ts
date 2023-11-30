@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { createBankAccountHandler, getBankAccountsHandler } from "./bankAccount.controller";
 import { $ref } from "./bankAccount.schema";
-import { getBankAccounts } from "./bankAccount.service";
 
 async function bankAccountRoutes(server: FastifyInstance) {
 
@@ -21,7 +20,7 @@ async function bankAccountRoutes(server: FastifyInstance) {
                 200: $ref('bankAccountsSchema')
             }
         }
-    }, getBankAccounts)
+    }, getBankAccountsHandler)
 }
 
 export default bankAccountRoutes
