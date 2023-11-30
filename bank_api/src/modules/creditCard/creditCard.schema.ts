@@ -12,7 +12,7 @@ const createCreditCardSchema = z.object({
 
 const createCreditCardResponseSchema = z.object({
     id: z.number(),
-    creditCardNumer: z.string(), 
+    creditCardNumber: z.string(), 
     expiration: z.string(),
     cvv: z.number()
 })

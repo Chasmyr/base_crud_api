@@ -4,6 +4,7 @@ import { $ref } from "./transaction.schema";
 
 async function transactionRoutes(server: FastifyInstance) {
 
+    // ajouter un pre handler qui va vérifier si la carte existe, si elle est active et s'il y a les fonds sur le compte
     server.post('/', {
         schema: {
             body: $ref('createTransactionSchema'),

@@ -18,26 +18,10 @@ export async function createTransaction(input: CreateTransactionInput){
 export async function getTransactions() {
     return prisma.transaction.findMany({
         select: {
+            id: true,
             payeeName: true,
             amount: true,
             createdAt: true,
-            creditCard: {
-                select: {
-                    creditCardNumber: true,
-                    accountLinked: {
-                        select: {
-                            id: true,
-                            owner: {
-                                select: {
-                                    firstName: true,
-                                    lastName: true,
-                                    id: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     })
 }

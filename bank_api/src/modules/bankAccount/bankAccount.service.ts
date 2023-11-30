@@ -1,9 +1,9 @@
 import prisma from "../../utils/prisma";
 import { CreateBankAccountInput } from "./bankAccount.schema";
 
-export async function createBankAccount(input: CreateBankAccountInput & {ownerId: number}) {
+export async function createBankAccount(data: CreateBankAccountInput & {ownerId: number}) {
     return prisma.bankAccount.create({
-        input,
+        data
     })
 }
 

@@ -20,15 +20,15 @@ export async function creditCardActivation(input: AuthCreditCardInput) {
 
     const {id} = input
     
-    const creditCard = prisma.creditCard.findUnique({
+    const creditCard = await prisma.creditCard.findUnique({
         where: {
             id
         }
     })
 
-    if(creditCard.token === null && !creditCard.isActive) {
+    if(creditCard.token === "" && !creditCard.isActive) {
         // activer la carte et générer le token
-    } else if (creditCard.token !== null && creditCard.isActive) {
+    } else if (creditCard.token !== "" && creditCard.isActive) {
         // code pour désactiver la carte 
     } else {
         // renvoie une erreur pour dire que la carte a été désactivée
@@ -36,22 +36,18 @@ export async function creditCardActivation(input: AuthCreditCardInput) {
 }
 
 export async function getCreditCards() {
-    return prisma.creditCard.findMany({
+    return await prisma.creditCard.findMany({
         select: {
             creditCardNumber: true,
             expiration: true,
             cvv: true,
             isActive: true,
-            accountLinked: {
+            id: true,
+            transactions: {
                 select: {
-                    id: true,
-                    owner: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                            id: true
-                        }
-                    }
+                    amount: true,
+                    payeeName: true,
+                    id: true
                 }
             }
         }

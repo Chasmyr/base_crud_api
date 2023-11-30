@@ -44,7 +44,7 @@ server.get('/healthcheck', async function() {
 })
 
 async function main() {
-    for (const schema of [...userSchemas, ...bankAccountSchemas, ...creditCardSchemas, transactionSchemas]){
+    for (const schema of [...userSchemas, ...bankAccountSchemas, ...creditCardSchemas, ...transactionSchemas]){
         server.addSchema(schema)
     }
 

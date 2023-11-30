@@ -18,7 +18,7 @@ COPY tsconfig.json ./
 COPY . .
 
 # Generate prisma client
-RUN npx prisma generate
+RUN npx prisma generate --schema=prisma_bank/schema.prisma
 
 EXPOSE 4002
 
