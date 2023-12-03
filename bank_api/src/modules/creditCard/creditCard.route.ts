@@ -22,13 +22,7 @@ async function creditCardRoutes(server: FastifyInstance) {
         }
     }, creditCardActivationHandler)
 
-    server.get('/all', {
-        schema: {
-            response: {
-                200: $ref('creditCardsResponseSchema')
-            }
-        }
-    }, getCreditCardsHandler)
+    server.get('/all', {}, getCreditCardsHandler)
 }
 
 export default creditCardRoutes

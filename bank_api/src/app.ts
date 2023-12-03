@@ -22,7 +22,8 @@ declare module "fastify-jwt" {
             "email": string,
             "firstName": string,
             "lastName": string,
-            "id": number
+            "id": number,
+            "role": string
         }
     }
 }

@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { createUser, findUserByEmail, findUsers } from "./user.service";
+import { createUser, deleteUser, findUserByEmail, findUsers, updateUser } from "./user.service";
 import { CreateUserInput, LoginInput } from "./user.schema";
 import { verifyPassword } from "../../utils/hash";
-import { server } from "../../app";
+import prisma from "../../utils/prisma";
 
 export async function registerUserHandler(
     request:FastifyRequest<{
@@ -17,7 +17,6 @@ export async function registerUserHandler(
 
             return reply.code(201).send(user)
         } catch(e) {
-            console.log(e)
             return reply.code(500).send(e)
         }
 }
@@ -47,6 +46,58 @@ export async function loginHandler(request:FastifyRequest<{
     }
 
     return reply.code(401).send({message: 'Invalid email or password'})
+}
+
+export async function deleteHandler(request:FastifyRequest, reply: FastifyReply) {
+
+    const {id: idFromToken, role: roleFromToken} = request.user
+    const userId = Number(request.params.id)
+    
+    try {
+        if(idFromToken === userId || roleFromToken === 'admin') {
+            const existingUser = await prisma.user.findUnique({
+                where: {id: userId}
+            })
+    
+            if(!existingUser) {
+                return reply.status(404).send({error: 'User not found'})
+            }
+    
+            const message = await deleteUser(userId)
+    
+            return reply.send(message)
+        } else {
+            return reply.code(401).send({error: 'Permission denied'})
+        }
+    } catch(e) {
+        return reply.code(500).send(e)
+    }
+}
+
+export async function updateHandler(request: FastifyRequest, reply: FastifyReply) {
+
+    const {id: idFromToken, role: roleFromToken} = request.user
+    const userId = Number(request.params.id)
+
+    try {
+        if(idFromToken === userId || roleFromToken === 'admin') {
+            const existingUser = await prisma.user.findUnique({
+                where: {id: userId}
+            })
+    
+            if(!existingUser) {
+                return reply.status(404).send({error: 'User not found'})
+            }
+    
+            const updatedUser = await updateUser(userId, request.body)
+    
+            return reply.send(updatedUser)
+        } else {
+            return reply.code(401).send({error: 'Permission denied'})
+        }
+    } catch(e) {
+        return reply.code(500).send(e)
+    }
 }
 
 export async function getUsersHandler() {

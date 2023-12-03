@@ -7,7 +7,8 @@ const userCore = {
         invalid_type_error: 'Email must be a string'
     }).email(),
     firstName: z.string(),
-    lastName: z.string()
+    lastName: z.string(),
+    role: z.string()
 }
 
 const createUserSchema = z.object({

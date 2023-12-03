@@ -14,13 +14,7 @@ async function bankAccountRoutes(server: FastifyInstance) {
         }
     }, createBankAccountHandler)
 
-    server.get('/', {
-        schema: {
-            response: {
-                200: $ref('bankAccountsSchema')
-            }
-        }
-    }, getBankAccountsHandler)
+    server.get('/', {}, getBankAccountsHandler)
 }
 
 export default bankAccountRoutes
