@@ -15,7 +15,7 @@ async function userRoutes(server:FastifyInstance) {
     },registerUserHandler)
 
     // delete user
-    server.delete('/delete/:id', {
+    server.delete('/:id', {
         preHandler: [server.authenticate],
     }, deleteHandler)
 

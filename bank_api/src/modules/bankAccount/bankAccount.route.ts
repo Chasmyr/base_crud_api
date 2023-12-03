@@ -1,9 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { createBankAccountHandler, getBankAccountsHandler } from "./bankAccount.controller";
-import { $ref } from "./bankAccount.schema";
+import { createBankAccountHandler, deleteHandler, getBankAccountsHandler } from "./bankAccount.controller";
+import { $ref, bankAccountSchemas } from "./bankAccount.schema";
 
 async function bankAccountRoutes(server: FastifyInstance) {
 
+    // create bank account
     server.post('/', {
         preHandler: [server.authenticate],
         schema: {
@@ -14,7 +15,19 @@ async function bankAccountRoutes(server: FastifyInstance) {
         }
     }, createBankAccountHandler)
 
-    server.get('/', {}, getBankAccountsHandler)
+    // delete bank account
+    server.delete('/:id', {
+        preHandler: [server.authenticate]
+    }, 
+    deleteHandler)
+
+    server.get('/', {
+        schema: {
+            response: {
+                200: $ref('bankAccountsSchema')
+            }
+        }
+    }, getBankAccountsHandler)
 }
 
 export default bankAccountRoutes
