@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createBankAccount, getBankAccounts } from "./bankAccount.service";
+import { createBankAccount, deleteBankAccount, getBankAccount, getBankAccounts, updateBankAccount } from "./bankAccount.service";
 import { CreateBankAccountInput } from "./bankAccount.schema";
-import prisma from "../../utils/prisma";
+import { created, notFound, serverError, unauthorized } from "../../utils/const";
 
 export async function createBankAccountHandler(request: FastifyRequest<{
     Body: CreateBankAccountInput
@@ -12,9 +12,9 @@ export async function createBankAccountHandler(request: FastifyRequest<{
             ownerId: request.user.id
         })
     
-        return reply.code(201).send(bankAccount)
+        return reply.code(created).send(bankAccount)
     } catch(e) {
-        return reply.code(500).send(e)
+        return reply.code(serverError).send(e)
     }
 }
 
@@ -25,22 +25,52 @@ export async function deleteHandler(request:FastifyRequest, reply: FastifyReply)
     const bankAccountId = Number(request.params.id)
     
     try {
-
-        const bankAccount = await prisma.bankAccount.findUnique({
-            where: {id: bankAccountId}
-        })
         
-        if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
+        const bankAccount = await getBankAccount(bankAccountId)
+        
+        if(!bankAccount) {
+            return reply.status(notFound).send({error: 'Bank account not found'})
+        } 
             
+        if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
+                
+            const message = await deleteBankAccount(bankAccountId)
+
+            return reply.send(message)
         } else {
-            return reply.code(401).send({error: 'Permission denied'})
+            return reply.code(unauthorized).send({error: 'Permission denied'})
         }
     } catch(e) {
-        return reply.code(500).send(e)
+        return reply.code(serverError).send(e)
     }
 }
 
 // update bankaccount
+export async function updateHandler(request: FastifyRequest, reply: FastifyReply) {
+
+    const {id: idFromToken, role: roleFromToken} = request.user
+    const bankAccountId = Number(request.params.id)
+
+    try {
+
+        const bankAccount = await getBankAccount(bankAccountId)
+
+        if(!bankAccount) {
+            return reply.status(notFound).send({error: 'Bank account not found'})
+        }
+        
+        if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
+            
+            const updatedBankAccount = await updateBankAccount(bankAccountId, request.body)
+        
+            return reply.send(updatedBankAccount)
+        } else {
+            return reply.code(unauthorized).send({error: 'Permission denied'})
+        }
+    } catch(e) {
+        return reply.code(serverError).send(e)
+    }    
+}
 
 export async function getBankAccountsHandler() {
     const products = await getBankAccounts()

@@ -1,7 +1,9 @@
+import { creditCardGeneratorMax, creditCardGeneratorMin, cvvGeneratorMax, cvvGeneratorMin } from "./const"
+
 export const getRandomCreditCardNumber = () => {
-    return (Math.random()  * (9999999999999999 - 1000000000000000) + 1000000000000000).toString()
+    return (Math.random()  * (creditCardGeneratorMax - creditCardGeneratorMin) + creditCardGeneratorMin).toString()
 }
 
 export const getRandomCVV = () => {
-    return Math.random()  * (999 - 100) + 100
+    return Math.random()  * (cvvGeneratorMax - cvvGeneratorMin) + cvvGeneratorMin
 }

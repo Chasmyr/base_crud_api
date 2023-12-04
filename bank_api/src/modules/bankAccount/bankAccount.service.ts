@@ -1,5 +1,5 @@
 import prisma from "../../utils/prisma";
-import { CreateBankAccountInput } from "./bankAccount.schema";
+import { BankAccountUpdateSchema, CreateBankAccountInput } from "./bankAccount.schema";
 
 export async function createBankAccount(data: CreateBankAccountInput & {ownerId: number}) {
     return prisma.bankAccount.create({
@@ -19,8 +19,24 @@ export async function deleteBankAccount(id: number) {
     return message
 }
 
-export async function updateBankAccount() {
+export async function updateBankAccount(id: number, body: BankAccountUpdateSchema) {
 
+    const updatedBankAccount = await prisma.bankAccount.update({
+        where: {id: id},
+        data: body
+    })
+
+    return updatedBankAccount
+}
+
+// get one bank account
+export async function getBankAccount(id: number) {
+
+    const bankAccount = await prisma.bankAccount.findUnique({
+        where: {id: id}
+    })
+
+    return bankAccount
 }
 
 export async function getBankAccounts() {

@@ -13,9 +13,9 @@ async function creditCardRoutes(server: FastifyInstance) {
         }
     }, createCreditCardHandler)
 
-    server.post('/activation', {
+    server.post('/activation/:id', {
+        preHandler: [server.authenticate],
         schema: {
-            body: $ref('creditCardAuthSchema'),
             response: {
                 200:  $ref('creditCardAuthResponseSchema')
                 }

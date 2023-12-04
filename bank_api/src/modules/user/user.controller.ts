@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { createUser, deleteUser, findUserByEmail, findUsers, updateUser } from "./user.service";
-import { CreateUserInput, LoginInput } from "./user.schema";
+import { createUser, deleteUser, findUserByEmail, findUsers, getUser, updateUser } from "./user.service";
+import { CreateUserInput, LoginInput, UserRequestSchema, UserUpdateSchema } from "./user.schema";
 import { verifyPassword } from "../../utils/hash";
-import prisma from "../../utils/prisma";
+import { created, notFound, serverError, unauthorized } from "../../utils/const";
 
 export async function registerUserHandler(
     request:FastifyRequest<{
@@ -15,9 +15,9 @@ export async function registerUserHandler(
         try {
             const user = await createUser(body)
 
-            return reply.code(201).send(user)
+            return reply.code(created).send(user)
         } catch(e) {
-            return reply.code(500).send(e)
+            return reply.code(serverError).send(e)
         }
 }
 
@@ -30,7 +30,7 @@ export async function loginHandler(request:FastifyRequest<{
     // find a user by email
     const user = await findUserByEmail(body.email)
 
-    if(!user) return reply.code(401).send({message: 'Invalid email or password'})
+    if(!user) return reply.code(unauthorized).send({message: 'Invalid email or password'})
 
     // verifry password
     const correctPassword = verifyPassword({
@@ -45,7 +45,7 @@ export async function loginHandler(request:FastifyRequest<{
         return {accessToken: request.server.jwt.sign(rest)}
     }
 
-    return reply.code(401).send({message: 'Invalid email or password'})
+    return reply.code(unauthorized).send({message: 'Invalid email or password'})
 }
 
 export async function deleteHandler(request:FastifyRequest, reply: FastifyReply) {
@@ -55,48 +55,47 @@ export async function deleteHandler(request:FastifyRequest, reply: FastifyReply)
     
     try {
         if(idFromToken === userId || roleFromToken === 'admin') {
-            const existingUser = await prisma.user.findUnique({
-                where: {id: userId}
-            })
+            const existingUser = await getUser(userId)
     
             if(!existingUser) {
-                return reply.status(404).send({error: 'User not found'})
+                return reply.status(notFound).send({error: 'User not found'})
             }
     
             const message = await deleteUser(userId)
     
             return reply.send(message)
         } else {
-            return reply.code(401).send({error: 'Permission denied'})
+            return reply.code(unauthorized).send({error: 'Permission denied'})
         }
     } catch(e) {
-        return reply.code(500).send(e)
+        return reply.code(serverError).send(e)
     }
 }
 
-export async function updateHandler(request: FastifyRequest, reply: FastifyReply) {
+export async function updateHandler(request: FastifyRequest<{
+    Body: UserUpdateSchema,
+    User: UserRequestSchema
+}>, reply: FastifyReply) {
 
     const {id: idFromToken, role: roleFromToken} = request.user
     const userId = Number(request.params.id)
 
     try {
         if(idFromToken === userId || roleFromToken === 'admin') {
-            const existingUser = await prisma.user.findUnique({
-                where: {id: userId}
-            })
+            const existingUser = await getUser(userId)
     
             if(!existingUser) {
-                return reply.status(404).send({error: 'User not found'})
+                return reply.status(notFound).send({error: 'User not found'})
             }
     
             const updatedUser = await updateUser(userId, request.body)
     
             return reply.send(updatedUser)
         } else {
-            return reply.code(401).send({error: 'Permission denied'})
+            return reply.code(unauthorized).send({error: 'Permission denied'})
         }
     } catch(e) {
-        return reply.code(500).send(e)
+        return reply.code(serverError).send(e)
     }
 }
 

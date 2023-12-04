@@ -12,6 +12,8 @@
   "dependencies": {
     "@fastify/jwt": "^7.2.3",
     "@prisma/client": "^5.6.0",
+    "@types/crypto-js": "^4.2.1",
+    "crypto-js": "^4.2.0",
     "fastify": "^4.24.3",
     "fastify-jwt": "^4.2.0",
     "fastify-swagger": "^5.2.0",
@@ -25,5 +27,4 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.2.2"
   }
-
 }

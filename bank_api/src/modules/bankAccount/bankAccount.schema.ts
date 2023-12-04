@@ -22,6 +22,10 @@ const bankAccountResponseSchema = z.object({
 const bankAccountsSchema = z.array(bankAccountResponseSchema)
 
 export type CreateBankAccountInput = z.infer<typeof createBankAccountSchema>
+export type BankAccountUpdateSchema = {
+    balance?: number,
+    overdraft?: number
+}
 
 export const {schemas: bankAccountSchemas, $ref} = buildJsonSchemas({
     createBankAccountSchema,
