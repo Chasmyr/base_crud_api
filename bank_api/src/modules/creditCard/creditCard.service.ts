@@ -46,7 +46,7 @@ export async function creditCardActivation(request: FastifyRequest, id: number) 
         where: {id: id}
     })
 
-    if(creditCard.token === "" && !creditCard.isActive) {
+    if(creditCard?.token === "" && !creditCard?.isActive) {
         // activer la carte et générer le token
         const encryptionKey = process.env.KEY || ""
         const {token, isActive, accountId, ...rest} = creditCard
@@ -64,7 +64,7 @@ export async function creditCardActivation(request: FastifyRequest, id: number) 
         })
         
         return {"message": `The credit card with id ${id} is active`}
-    } else if (creditCard.token !== "" && creditCard.isActive) {
+    } else if (creditCard?.token !== "" && creditCard?.isActive) {
         // code pour désactiver la carte 
         console.log('ici')
     } else {
