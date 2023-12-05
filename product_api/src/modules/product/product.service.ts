@@ -7,19 +7,30 @@ export async function createProduct(data: CreateProductInput & {ownerId: number}
     })
 }
 
-export async function getProducts() {
+export async function getAllProducts() {
     return prisma.product.findMany({
         select: {
             content: true,
             title: true,
             price: true,
             id: true,
-            owner: {
-                select: {
-                    name: true,
-                    id: true
-                }
-            }
+        }
+    })
+}
+
+export async function getProduct(productId:number) {
+    return prisma.product.findUnique({
+        where: {
+            productId: productId
+        }
+    })
+}
+
+
+export async function removeProduct(productId: number) {
+    return prisma.product.deleted({
+        where: {
+            productId: productId
         }
     })
 }

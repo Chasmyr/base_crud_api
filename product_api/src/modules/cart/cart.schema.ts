@@ -17,9 +17,9 @@ const createCartSchema = z.object({
     ...cartInput,
 })
 
+
 const cartResponseSchema = z.object({
     ...cartInput,
-    ...cartGenerated,
 })
 
 const removeProductFromCartSchema = z.object({
@@ -27,6 +27,7 @@ const removeProductFromCartSchema = z.object({
 })
 
 const cartsResponseSchema = z.array(cartResponseSchema)
+
 
 export type CreateCartInput = z.infer<typeof createCartSchema>
 

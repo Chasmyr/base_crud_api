@@ -38,3 +38,39 @@ model Cart {
   products Product[]
 }
 
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL_PRODUCT")
+// }
+
+// model User {
+//   id        Int       @id @default(autoincrement())
+//   email     String    @unique
+//   name      String?
+//   password  String
+//   salt      String
+//   carts      Cart[]
+// }
+
+// model Product {
+//   id         Int       @id @default(autoincrement())
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
+//   title      String    @db.VarChar(255)
+//   content    String?
+//   price      Float
+//   cart       Cart      @relation(fields: [cartId], references: [id])
+//   cartId     Int
+// }
+
+// model Cart {
+//   id       Int        @id @default(autoincrement())
+//   status   Boolean
+//   userId   Int
+//   user     User       @relation(fields: [userId], references: [id])
+//   products Product[]
+// }

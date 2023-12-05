@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { createCartHandler, getProductsByCartHandler } from "./cart.controller";
+import { createCartHandler, getAllCartsHandler, addProductToCartHandler, removeProductHandler, removeAllProductHandler } from "./cart.controller";
 import { $ref } from "./cart.schema";
 
 async function cartRoutes(server: FastifyInstance) {
@@ -15,26 +15,45 @@ async function cartRoutes(server: FastifyInstance) {
         }
     }, createCartHandler)
 
-    // Get All Cart
-    server.get('/rtdfgfgdf', {
+    // Get All cart by user
+    server.get('/:userId', {
         schema: {
             response: {
-                200: $ref('cartResponseSchema')
+                201: $ref('cartResponseSchema')
             }
         }
-    }, getProductsByCartHandler)
+    }, getAllCartsHandler)
+
+
+    // Add product to Cart
+    server.post('/:cartId/products/:productId', {
+        preHandler: [server.authenticate],
+        schema: {
+            response: {
+                201: $ref('cartResponseSchema')
+            }
+        }
+    }, addProductToCartHandler)
 
 
 
-
-    // server.delete('/', {
+    // // Remove product
+    // server.delete('/:cartId/products/:productId', {
     //     schema: {
-    //         body: $ref(removeProductFromCartSchema)
     //         response: {
-    //             200: $ref('cartResponseSchema')
+    //             200: $ref('cartsResponseSchema')
     //         }
-    //     }
-    // }, getCartsHandler)
+    //     } 
+    // }, removeProductHandler);
+
+    // // Remove all products
+    // server.delete('/:cartId/products/', {
+    //     schema: {
+    //         response: {
+    //             200: $ref('cartsResponseSchema')
+    //         }
+    //     } 
+    // }, removeAllProductHandler);
 }
 
 export default cartRoutes

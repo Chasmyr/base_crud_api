@@ -11,7 +11,8 @@ services:
       - "4001:4001"
     depends_on:
       - db-product
-    
+    volumes:
+      - ./:/app
 
   db-product:
     image: postgres:latest

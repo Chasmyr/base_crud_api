@@ -2,7 +2,6 @@ import prisma from "../../utils/prisma";
 import { cartSchemas, $ref } from './cart.schema';
 
 // Create cart for current user
-
 export const createCart = async (userId: number) => {
     return prisma.cart.create({
       data: {
@@ -13,28 +12,20 @@ export const createCart = async (userId: number) => {
 };
   
 // Add product to Cart
-export const addToCart = async (cartId: number, productId: number) => {
-  let cart = await prisma.cart.findUnique({
-    where: { cartId: cartId },
-  });
-
-  if (!cart) {
-    cart = await createCart(cartId);
-  }
-
-  return prisma.cartItem.create({
+export const addProductToCart = async (cartId: number, productId: number) => {
+  return prisma.cart.create({
     data: {
       cartId: cart.id,
-      productId,
+      productId: productId,
     },
   });
 };
   
 // Get all carts
-export const getProductsByCart = async (cartId: number) => {
-  return prisma.cartItem.findMany({
+export const getAllCarts = async (userId: number) => {
+  return prisma.cart.findMany({
     where: {
-      cartId: cartId,
+      userId: userId,
     },
     include: {
       product: true, 
@@ -42,14 +33,26 @@ export const getProductsByCart = async (cartId: number) => {
   });
 };
 
-// Check if user have already a Cart
-export const findCartByUserId = async (userId: number) => {
-  return prisma.cart.findFirst({
-      where: {
-          userId: userId,
-      },
-  });
-};
+
+
+
+
+
+// // Check if user have already a Cart
+// export const findCartByUserId = async (userId: number) => {
+//   const userIdInt = parseInt(userId, 10);
+
+//   // Vérifier si la conversion est réussie
+//   if (isNaN(userIdInt)) {
+//     throw new Error('Invalid user ID');
+//   }
+
+//   return prisma.cart.findFirst({
+//       where: {
+//           userId: userIdInt,
+//       },
+//   });
+// };
 
 // export const removeProductFromCard = async (userId: number, productId: number) => {
 //   return prisma.cart.productId.deleteMany ({
