@@ -3,6 +3,7 @@ import { createUser, deleteUser, findUserByEmail, findUsers, getUser, updateUser
 import { CreateUserInput, LoginInput, UserRequestSchema, UserUpdateSchema } from "./user.schema";
 import { verifyPassword } from "../../utils/hash";
 import { created, notFound, serverError, unauthorized } from "../../utils/const";
+import { idAndRoleMiddleware } from "../../utils/middleware";
 
 export async function registerUserHandler(
     request:FastifyRequest<{
@@ -48,13 +49,15 @@ export async function loginHandler(request:FastifyRequest<{
     return reply.code(unauthorized).send({message: 'Invalid email or password'})
 }
 
-export async function deleteHandler(request:FastifyRequest, reply: FastifyReply) {
+export async function deleteHandler(request:FastifyRequest<{
+    Params: {id: string}
+}>, reply: FastifyReply) {
 
     const {id: idFromToken, role: roleFromToken} = request.user
     const userId = Number(request.params.id)
     
     try {
-        if(idFromToken === userId || roleFromToken === 'admin') {
+        if(idAndRoleMiddleware({id1: idFromToken, id2: userId}, true, roleFromToken, ['admin'])) {
             const existingUser = await getUser(userId)
     
             if(!existingUser) {
@@ -74,14 +77,15 @@ export async function deleteHandler(request:FastifyRequest, reply: FastifyReply)
 
 export async function updateHandler(request: FastifyRequest<{
     Body: UserUpdateSchema,
-    User: UserRequestSchema
+    User: UserRequestSchema,
+    Params: {id: string}
 }>, reply: FastifyReply) {
 
     const {id: idFromToken, role: roleFromToken} = request.user
     const userId = Number(request.params.id)
 
     try {
-        if(idFromToken === userId || roleFromToken === 'admin') {
+        if(idAndRoleMiddleware({id1: idFromToken, id2: userId}, true, roleFromToken, ['admin'])) {
             const existingUser = await getUser(userId)
     
             if(!existingUser) {

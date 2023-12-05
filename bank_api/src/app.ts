@@ -7,6 +7,7 @@ import creditCardRoutes from "./modules/creditCard/creditCard.route";
 import { creditCardSchemas } from "./modules/creditCard/creditCard.schema";
 import { transactionSchemas } from "./modules/transaction/transaction.schema";
 import transactionRoutes from "./modules/transaction/transaction.route";
+import fastifyJwt, { FastifyJWTOptions } from '@fastify/jwt'
 
 export const server = Fastify()
 
@@ -16,7 +17,7 @@ declare module "fastify" {
     }
 }
 
-declare module "fastify-jwt" {
+declare module "@fastify/jwt" {
     interface FastifyJWT {
         user: {
             "email": string,
@@ -24,7 +25,7 @@ declare module "fastify-jwt" {
             "lastName": string,
             "id": number,
             "role": string
-        },
+        };
         creditCard: {
             "creditCardNumber": string,
             "expiration": string,

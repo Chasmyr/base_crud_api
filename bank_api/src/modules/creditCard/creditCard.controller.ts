@@ -14,7 +14,9 @@ export async function createCreditCardHandler(request: FastifyRequest<{
 }
 
 // delete credit card
-export async function deleteHanlder(request: FastifyRequest, reply: FastifyReply) {
+export async function deleteHanlder(request: FastifyRequest<{
+    Params: {id: string}
+}>, reply: FastifyReply) {
 
     const {id: idFromToken, role: roleFromToken} = request.user
     const creditCardId = Number(request.params.id)
@@ -30,7 +32,7 @@ export async function deleteHanlder(request: FastifyRequest, reply: FastifyReply
         const cardAccount = await getBankAccountFromCreditCard(creditCard.accountId)
             
         if(idFromToken === cardAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
-                
+            
             const message = await deleteCreditCard(creditCardId)
 
             return reply.send(message)
@@ -42,7 +44,9 @@ export async function deleteHanlder(request: FastifyRequest, reply: FastifyReply
     }
 }
 
-export async function creditCardActivationHandler(request: FastifyRequest, reply: FastifyReply) {
+export async function creditCardActivationHandler(request: FastifyRequest<{
+    Params: {id: string}
+}>, reply: FastifyReply) {
 
     const {role: roleFromToken} = request.user
     const creditCardId = Number(request.params.id)
@@ -68,7 +72,9 @@ export async function creditCardActivationHandler(request: FastifyRequest, reply
     }
 }
 
-export async function creditCardDesactivationHandler(request: FastifyRequest, reply: FastifyReply) {
+export async function creditCardDesactivationHandler(request: FastifyRequest<{
+    Params: {id: string}
+}>, reply: FastifyReply) {
     
     const {role: roleFromToken} = request.user
     const creditCardId = Number(request.params.id)

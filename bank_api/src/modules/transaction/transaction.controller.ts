@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { CreateTransactionInput } from "./transaction.schema";
 import { createTransaction, getTransactions } from "./transaction.service";
-import { getCreditCard, isCreditCardCredentialsOk } from "../creditCard/creditCard.service";
+import { creditCardDesactivation, getCreditCard, isCreditCardCredentialsOk } from "../creditCard/creditCard.service";
 import { serverError, notFound, unauthorized, permDenied } from "../../utils/const";
 import { CreditCardJwtSchema } from "../creditCard/creditCard.schema";
 import { compareDateForCreditCard } from "../../utils/date";
@@ -17,7 +17,7 @@ export async function createTransactionHandler(request: FastifyRequest<{
         creditCardNumber: creditCardNumberFromToken,
         expiration: expirationFromToken,
         cvv: cvvFromToken
-    } = request.user
+    } = request.creditCard
     const {payeeName, payeeId, amount} = request.body
 
     try {
@@ -44,6 +44,7 @@ export async function createTransactionHandler(request: FastifyRequest<{
     
                 return reply.send(transaction)
             } else {
+                const desactiveCard = creditCardDesactivation(creditCardIdFromToken)
                 return reply.code(serverError).send("Credit card is expired")
             }
         } else {

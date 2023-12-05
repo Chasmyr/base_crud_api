@@ -4,7 +4,7 @@ export function compareDateForCreditCard(date1: Date, dateStr2: string) {
     const year2 = parseInt(parts[1], 10) + 2000 // Ajouter 2000 pour les années à deux chiffres
 
     const nextMonth = new Date(year2, month2 + 1, 1)
-    const lastDayOfMonth = new Date(nextMonth - 1)
+    const lastDayOfMonth = new Date((nextMonth as any) - 1)
 
     // Comparer les dates
     if (date1 > lastDayOfMonth) {

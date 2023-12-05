@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { createBankAccount, deleteBankAccount, getBankAccount, getBankAccounts, updateBankAccount } from "./bankAccount.service";
-import { CreateBankAccountInput } from "./bankAccount.schema";
+import { BankAccountUpdateSchema, CreateBankAccountInput } from "./bankAccount.schema";
 import { created, notFound, serverError, unauthorized } from "../../utils/const";
 
 export async function createBankAccountHandler(request: FastifyRequest<{
@@ -19,7 +19,9 @@ export async function createBankAccountHandler(request: FastifyRequest<{
 }
 
 // delete bank account
-export async function deleteHandler(request:FastifyRequest, reply: FastifyReply) {
+export async function deleteHandler(request:FastifyRequest<{
+    Params: {id: string}
+}>, reply: FastifyReply) {
 
     const {id: idFromToken, role: roleFromToken} = request.user
     const bankAccountId = Number(request.params.id)
@@ -46,7 +48,10 @@ export async function deleteHandler(request:FastifyRequest, reply: FastifyReply)
 }
 
 // update bankaccount
-export async function updateHandler(request: FastifyRequest, reply: FastifyReply) {
+export async function updateHandler(request: FastifyRequest<{
+    Params: {id: string},
+    Body: BankAccountUpdateSchema
+}>, reply: FastifyReply) {
 
     const {id: idFromToken, role: roleFromToken} = request.user
     const bankAccountId = Number(request.params.id)
