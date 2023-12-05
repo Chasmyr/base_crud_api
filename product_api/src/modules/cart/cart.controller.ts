@@ -1,22 +1,28 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createCart, getCarts as getCart } from "./cart.service";
-import { CreateCartInput } from "./cart.schema";
+import { createCart, addToCart, getProductsByCart, findCartByUserId, removeProductFromCard } from "./cart.service";
+import { cartSchemas, CreateCartInput } from "./cart.schema";
 
 export async function createCartHandler(request: FastifyRequest<{
     Body: CreateCartInput
 }>) {
 
-    const cart = await createCart({
-        ...request.body,
-        ownerId: request.user.id
-    })
-
+    const { userId } = request.body;
+    const cart = await createCart(userId)
     return cart
 }
 
-export async function getCartsHandler() {
-    const cart = await getCart()
+export async function getProductsByCartHandler(request: FastifyRequest<{ 
+    Body: { cartId: number } }>) {
 
-    return cart
+    const { cartId } = request.body;
+    const items = await getProductsByCart(cartId);
+    
+    return items;
+
 }
 
+// export async function removeProductFromCartHandler() {
+//     const cart = await getProductsByCart()
+
+//     return cart
+// }

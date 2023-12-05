@@ -1,9 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { createCartHandler, getCartsHandler } from "./cart.controller";
+import { createCartHandler, getProductsByCartHandler } from "./cart.controller";
 import { $ref } from "./cart.schema";
 
 async function cartRoutes(server: FastifyInstance) {
 
+    // Create Cart
     server.post('/', {
         preHandler: [server.authenticate],
         schema: {
@@ -14,13 +15,26 @@ async function cartRoutes(server: FastifyInstance) {
         }
     }, createCartHandler)
 
-    server.get('/', {
+    // Get All Cart
+    server.get('/rtdfgfgdf', {
         schema: {
             response: {
-                200: $ref('cartsResponseSchema')
+                200: $ref('cartResponseSchema')
             }
         }
-    }, getCartsHandler)
+    }, getProductsByCartHandler)
+
+
+
+
+    // server.delete('/', {
+    //     schema: {
+    //         body: $ref(removeProductFromCartSchema)
+    //         response: {
+    //             200: $ref('cartResponseSchema')
+    //         }
+    //     }
+    // }, getCartsHandler)
 }
 
 export default cartRoutes

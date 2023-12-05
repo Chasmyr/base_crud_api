@@ -1,5 +1,6 @@
 import {z} from 'zod'
 import {buildJsonSchemas} from 'fastify-zod'
+ 
 
 const cartInput = {
     userId: z.number(),
@@ -21,12 +22,18 @@ const cartResponseSchema = z.object({
     ...cartGenerated,
 })
 
+const removeProductFromCartSchema = z.object({
+    ...cartInput,
+})
+
 const cartsResponseSchema = z.array(cartResponseSchema)
 
 export type CreateCartInput = z.infer<typeof createCartSchema>
 
 export const {schemas: cartSchemas, $ref} = buildJsonSchemas({
+    cartInput,
+    cartGenerated,
     createCartSchema,
     cartResponseSchema,
-    cartsResponseSchema
+    cartsResponseSchema,
 }, { $id: 'CartSchema'})
