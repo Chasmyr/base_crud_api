@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { CreateCreditCardInput } from "./creditCard.schema";
-import { createCreditCard, creditCardActivation, deleteCreditCard, getBankAccountFromCreditCard, getCreditCard, getCreditCards, updateCreditCard } from "./creditCard.service";
-import { notFound, serverError, unauthorized } from "../../utils/const";
+import { createCreditCard, creditCardActivation, creditCardDesactivation, deleteCreditCard, getBankAccountFromCreditCard, getCreditCard, getCreditCards, updateCreditCard } from "./creditCard.service";
+import { notFound, permDenied, serverError, unauthorized } from "../../utils/const";
 
 export async function createCreditCardHandler(request: FastifyRequest<{
     Body: CreateCreditCardInput
@@ -35,7 +35,7 @@ export async function deleteHanlder(request: FastifyRequest, reply: FastifyReply
 
             return reply.send(message)
         } else {
-            return reply.code(unauthorized).send({error: 'Permission denied'})
+            return reply.code(unauthorized).send(permDenied)
         }
     } catch(e) {
         return reply.code(serverError).send(e)
@@ -61,15 +61,38 @@ export async function creditCardActivationHandler(request: FastifyRequest, reply
 
             return reply.send(creditCardActivated)
         } else {
-            return reply.code(unauthorized).send({error: 'Permission denied'})
+            return reply.code(unauthorized).send(permDenied)
         }
     } catch(e) {
         return reply.code(serverError).send(e)
     }
 }
 
-export async function creditCardEncryptToken() {
+export async function creditCardDesactivationHandler(request: FastifyRequest, reply: FastifyReply) {
     
+    const {role: roleFromToken} = request.user
+    const creditCardId = Number(request.params.id)
+
+    try {
+        
+        const creditCard = await getCreditCard(creditCardId)
+
+        if(!creditCard) {
+            return reply.status(notFound).send({error: 'Credit card not found'})
+        }
+
+        if(roleFromToken === 'employee' || roleFromToken === 'admin') {
+            
+            const creditCardDesactivated = await creditCardDesactivation(creditCardId)
+
+            return reply.send(creditCardDesactivated)
+        } else {
+            return reply.code(unauthorized).send(permDenied)
+        }
+    } catch(e) {
+        return reply.code(serverError).send(e)
+    } 
+
 }
 
 export async function getCreditCardsHandler() {

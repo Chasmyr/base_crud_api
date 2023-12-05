@@ -6,8 +6,9 @@ async function transactionRoutes(server: FastifyInstance) {
 
     // ajouter un pre handler qui va vérifier si la carte existe, si elle est active et s'il y a les fonds sur le compte
     server.post('/', {
+        preHandler: [server.authenticate],
         schema: {
-            body: $ref('createTransactionSchema'),
+            body: $ref('createTransactionSchemaInput'),
             response: {
                 201: $ref('createTransactionResponseSchema')
             }

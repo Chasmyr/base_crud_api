@@ -23,10 +23,15 @@ const creditCardAuthResponseSchema = z.object({
     token: z.string()
 })
 
-
 const creditCardsResponseSchema = z.array(createCreditCardResponseSchema)
 
 export type CreateCreditCardInput = z.infer<typeof createCreditCardSchema>
+export type CreditCardJwtSchema = {
+    id: number,
+    creditCardNumber: string,
+    expiration: string,
+    cvv: number
+}
 
 export const {schemas: creditCardSchemas, $ref} = buildJsonSchemas({
     createCreditCardSchema,

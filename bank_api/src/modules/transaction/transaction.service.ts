@@ -1,8 +1,8 @@
 import prisma from "../../utils/prisma";
-import { CreateTransactionInput } from "./transaction.schema";
+import { CreateTransaction } from "./transaction.schema";
 
 
-export async function createTransaction(input: CreateTransactionInput){
+export async function createTransaction(input: CreateTransaction){
 
     const {payeeName, payeeId, amount, creditCardId} = input
 
@@ -11,9 +11,7 @@ export async function createTransaction(input: CreateTransactionInput){
     })
 
     return transaction
-
 }
-
 
 export async function getTransactions() {
     return prisma.transaction.findMany({

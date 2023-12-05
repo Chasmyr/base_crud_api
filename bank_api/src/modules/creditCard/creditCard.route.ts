@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify/types/instance";
 import { $ref } from "./creditCard.schema";
-import { createCreditCardHandler, creditCardActivationHandler, getCreditCardsHandler } from "./creditCard.controller";
+import { createCreditCardHandler, creditCardActivationHandler, creditCardDesactivationHandler, getCreditCardsHandler } from "./creditCard.controller";
 
 async function creditCardRoutes(server: FastifyInstance) {
     
@@ -13,14 +13,13 @@ async function creditCardRoutes(server: FastifyInstance) {
         }
     }, createCreditCardHandler)
 
-    server.post('/activation/:id', {
-        preHandler: [server.authenticate],
-        schema: {
-            response: {
-                200:  $ref('creditCardAuthResponseSchema')
-                }
-        }
+    server.get('/activation/:id', {
+        preHandler: [server.authenticate]
     }, creditCardActivationHandler)
+
+    server.get('/desactivation/:id', {
+        preHandler: [server.authenticate],
+    }, creditCardDesactivationHandler)
 
     server.get('/all', {}, getCreditCardsHandler)
 }

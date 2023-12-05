@@ -24,12 +24,18 @@ declare module "fastify-jwt" {
             "lastName": string,
             "id": number,
             "role": string
+        },
+        creditCard: {
+            "creditCardNumber": string,
+            "expiration": string,
+            "cvv": number,
+            "id": number
         }
     }
 }
 
 server.register(require('@fastify/jwt'), {
-    secret: 'hajlazjlejamlzlmsofopoajramspofa'
+    secret: process.env.JWT_SECRET
 })
 
 server.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {

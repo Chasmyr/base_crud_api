@@ -6,4 +6,4 @@ export const created = 201
 export const serverError = 500
 export const unauthorized = 401 
 export const notFound = 404
-
+export const permDenied = {error: 'Permission denied'}
