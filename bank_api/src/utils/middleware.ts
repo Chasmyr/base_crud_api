@@ -1,4 +1,4 @@
-import { idMiddlewareInput, roleMiddlewareInput } from "./types";
+import { idMiddlewareInput, roleMiddlewareInput } from "../../types/middleware";
 
 export function idAndRoleMiddleware(ids: idMiddlewareInput, self: boolean, currRole: string, roles: roleMiddlewareInput) {
 

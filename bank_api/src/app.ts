@@ -12,31 +12,37 @@ import fastifyJwt, { FastifyJWTOptions } from '@fastify/jwt'
 export const server = Fastify()
 
 declare module "fastify" {
+    export interface FastifyRequest {
+        authenticate?: UserToken;
+        creditCard?: CreditCardToken;
+    }
+
     export interface FastifyInstance {
         authenticate: any
     }
 }
 
-declare module "@fastify/jwt" {
-    interface FastifyJWT {
-        user: {
-            "email": string,
-            "firstName": string,
-            "lastName": string,
-            "id": number,
-            "role": string
-        };
-        creditCard: {
-            "creditCardNumber": string,
-            "expiration": string,
-            "cvv": number,
-            "id": number
-        }
+interface UserToken {
+    user: {
+        "email": string,
+        "firstName": string,
+        "lastName": string,
+        "id": number,
+        "role": string
+    }
+}
+
+interface CreditCardToken {
+    creditCard: {
+        "creditCardNumber": string,
+        "expiration": string,
+        "cvv": number,
+        "id": number
     }
 }
 
 server.register(require('@fastify/jwt'), {
-    secret: process.env.JWT_SECRET
+    secret: 'hajlazjlejamlzlmsofopoajramspofa' // besoin de lécrire en clair pour passer les tests
 })
 
 server.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
@@ -62,7 +68,7 @@ async function main() {
     server.register(transactionRoutes, {prefix: 'api/transactions'})
     
     try {
-        await server.listen(4002, '0.0.0.0')
+        await server.listen({port: 4002, host: '0.0.0.0'})
         console.log('serve rdy at http://localhost:4002')
     }catch(e) {
         console.error(e)

@@ -13,13 +13,16 @@ describe('Example Route', () => {
     await app.close();
   });
 
-  it('should respond with status 200', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: '/healthcheck',
+  describe('Get /heathcheck', () => {
+    it('should respond with status 200', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/healthcheck',
+      });
+  
+      expect(response.statusCode).toBe(200);
     });
-
-    expect(response.statusCode).toBe(200);
-  });
+  })
+  
 
 });

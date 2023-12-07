@@ -1,8 +1,8 @@
 import prisma from "../../utils/prisma";
-import { CreateTransaction } from "./transaction.schema";
+import { CreateAuthorizedTransaction } from "./transaction.schema";
 
 
-export async function createTransaction(input: CreateTransaction){
+export async function createTransaction(input: CreateAuthorizedTransaction){
 
     const {payeeName, payeeId, amount, creditCardId} = input
 

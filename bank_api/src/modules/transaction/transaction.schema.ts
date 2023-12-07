@@ -29,6 +29,7 @@ const createTransactionSchema = z.object({
 const transactionsResponseSchema = z.array(createTransactionResponseSchema)
 
 export type CreateTransactionInput = z.infer<typeof createTransactionSchemaInput>
+export type CreateAuthorizedTransaction = z.infer<typeof createTransactionSchema>
 
 export const {schemas: transactionSchemas, $ref} = buildJsonSchemas({
     createTransactionSchemaInput,
