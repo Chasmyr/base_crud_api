@@ -38,7 +38,7 @@ export async function loginHandler(request:FastifyRequest<{
     // verifry password
     const correctPassword = verifyPassword({
         candidatePassword: body.password,
-        salt: user.salt,
+        role: user.role,
         hash: user.password
     })
 
@@ -49,7 +49,7 @@ export async function loginHandler(request:FastifyRequest<{
             await createCart(user.id);
         }
 
-        const {password, salt, ...rest} = user
+        const {password, role, ...rest} = user
         // generate access token
         return {accessToken: request.server.jwt.sign(rest)}
 

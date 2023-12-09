@@ -4,7 +4,7 @@ import { $ref } from "./product.schema";
 
 async function productRoutes(server: FastifyInstance) {
 
-    // Add product to cart
+    // Create product
     server.post('/', {
         preHandler: [server.authenticate],
         schema: {

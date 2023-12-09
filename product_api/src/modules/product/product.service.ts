@@ -1,7 +1,7 @@
 import prisma from "../../utils/prisma";
 import { CreateProductInput } from "./product.schema";
 
-export async function createProduct(data: CreateProductInput & {ownerId: number}) {
+export const createProduct = async(data: CreateProductInput & {userId: number}) => {
     return prisma.product.create({
         data,
     })

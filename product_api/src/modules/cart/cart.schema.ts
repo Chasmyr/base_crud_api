@@ -7,11 +7,14 @@ const cartInput = {
     status: z.boolean().optional()
 }
 
-const cartGenerated = {
-    id: z.number(),
-    createdAt: z.string(),
-    updatedAt: z.string()
-}
+const getCartsSchema = z.object({
+    userId: z.number()
+})
+
+const getCartProductSchema = z.object({
+    cartId: z.number(),
+    productId: z.number()
+})
 
 const createCartSchema = z.object({
     ...cartInput,
@@ -26,15 +29,18 @@ const removeProductFromCartSchema = z.object({
     ...cartInput,
 })
 
+//Permet de renvoyer un tableau en reponse
 const cartsResponseSchema = z.array(cartResponseSchema)
 
+//Signifie que CreateCartInput sera type TS == structure et regle dans createCartSchema
 
 export type CreateCartInput = z.infer<typeof createCartSchema>
 
 export const {schemas: cartSchemas, $ref} = buildJsonSchemas({
     cartInput,
-    cartGenerated,
+    getCartProductSchema,
     createCartSchema,
     cartResponseSchema,
     cartsResponseSchema,
+    getCartsSchema,
 }, { $id: 'CartSchema'})

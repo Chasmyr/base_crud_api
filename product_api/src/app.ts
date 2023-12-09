@@ -7,7 +7,11 @@ import productRoutes from "./modules/product/product.route";
 import { productSchemas } from "./modules/product/product.schema";
 
 
-export const server = Fastify()
+export const server = Fastify({
+    logger: {
+        level: 'info'
+    }
+})
 
 declare module "fastify" {
     export interface FastifyInstance {
@@ -50,11 +54,11 @@ async function main() {
 
     server.register(cartRoutes, {prefix: 'api/cart'})
 
-    server.register(productRoutes, {prefix: 'api/products'})
+    server.register(productRoutes, {prefix: 'api/product'})
     
     try {
-        await server.listen(4001, '0.0.0.0')
-        console.log('serve rdy at http://localhost:4001')
+        await server.listen({port: 4001, host: '0.0.0.0'})
+            console.log('serve rdy at http://localhost:4001')
     }catch(e) {
         console.error(e)
         process.exit(1)

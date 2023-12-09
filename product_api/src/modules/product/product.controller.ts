@@ -6,15 +6,13 @@ export async function createProductHandler(request: FastifyRequest<{ Body: Creat
 
     const product = await createProduct({
         ...request.body,
-        ownerId: request.user.id
+        userId: request.user.id
     })
-
     return product
 }
 
 export async function getAllProductsHandler() {
     const products = await getAllProducts()
-
     return products
 }
 
