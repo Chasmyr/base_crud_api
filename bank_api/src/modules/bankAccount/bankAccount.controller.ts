@@ -8,10 +8,10 @@ export async function createBankAccountHandler(request: FastifyRequest<{
 }>, reply: FastifyReply) {
 
     try {
-        if(request.authenticate) {
+        if(request.user) {
             const bankAccount = await createBankAccount({
                 ...request.body,
-                ownerId: request.authenticate.user.id
+                ownerId: request.user.id
             })
         
             return reply.code(created).send(bankAccount)
@@ -29,8 +29,8 @@ export async function deleteHandler(request:FastifyRequest<{
 }>, reply: FastifyReply) {
 
    try {
-       if(request.authenticate) {
-           const {id: idFromToken, role: roleFromToken} = request.authenticate.user
+       if(request.user) {
+           const {id: idFromToken, role: roleFromToken} = request.user
            const bankAccountId = Number(request.params.id)
            const bankAccount = await getBankAccount(bankAccountId)
            
@@ -61,8 +61,8 @@ export async function updateHandler(request: FastifyRequest<{
 }>, reply: FastifyReply) {
 
     try {
-        if(request.authenticate) {
-            const {id: idFromToken, role: roleFromToken} = request.authenticate.user
+        if(request.user) {
+            const {id: idFromToken, role: roleFromToken} = request.user
             const bankAccountId = Number(request.params.id)
             const bankAccount = await getBankAccount(bankAccountId)
 

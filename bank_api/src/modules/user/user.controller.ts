@@ -63,7 +63,7 @@ export async function deleteHandler(request:FastifyRequest<{
                 if(!existingUser) {
                     return reply.status(notFound).send({error: 'User not found'})
                 }
-        
+                
                 const message = await deleteUser(userId)
         
                 return reply.send(message)

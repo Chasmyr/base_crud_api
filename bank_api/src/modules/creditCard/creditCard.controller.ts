@@ -19,8 +19,8 @@ export async function deleteHanlder(request: FastifyRequest<{
 }>, reply: FastifyReply) {
 
     try {
-        if (request.authenticate) {
-            const {id: idFromToken, role: roleFromToken} = request.authenticate?.user
+        if (request.user) {
+            const {id: idFromToken, role: roleFromToken} = request.user
             const creditCardId = Number(request.params.id)
             const creditCard = await getCreditCard(creditCardId)
             
@@ -51,8 +51,8 @@ export async function creditCardActivationHandler(request: FastifyRequest<{
 }>, reply: FastifyReply) {
 
     try {
-        if(request.authenticate) {
-            const {role: roleFromToken} = request.authenticate.user
+        if(request.user) {
+            const {role: roleFromToken} = request.user
             const creditCardId = Number(request.params.id)
             const creditCard = await getCreditCard(creditCardId)
     
@@ -81,8 +81,8 @@ export async function creditCardDesactivationHandler(request: FastifyRequest<{
 }>, reply: FastifyReply) {
     
     try {
-        if(request.authenticate) {
-            const {role: roleFromToken} = request.authenticate?.user
+        if(request.user) {
+            const {role: roleFromToken} = request.user
             const creditCardId = Number(request.params.id)
             const creditCard = await getCreditCard(creditCardId)
     

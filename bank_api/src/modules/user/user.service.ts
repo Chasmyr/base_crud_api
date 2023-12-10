@@ -21,6 +21,8 @@ export async function deleteUser(id: number) {
         where: { id: id }
     })
 
+    // TODO - remove all data related to user like bank account but keep credit card and transactions et aussi desactiver le JWT
+
     const message = {message: `User ${user.firstName} with id ${user.id} has been deleted`}
 
     return message

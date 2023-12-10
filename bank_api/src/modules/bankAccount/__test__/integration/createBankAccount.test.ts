@@ -7,7 +7,6 @@ test('POST `/api/bankaccounts`', async (t) => {
 
     t.beforeEach(async () => {
         await prisma.user.deleteMany({})
-        await prisma.bankAccount.deleteMany({})
     })
 
     test('create bank account successfully', async (t) => {
