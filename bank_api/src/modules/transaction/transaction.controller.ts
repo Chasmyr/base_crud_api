@@ -12,51 +12,53 @@ export async function createTransactionHandler(request: FastifyRequest<{
 
     // récup les données
     try {
-
-        const creditCardToken = request.creditCard
-
-        if(creditCardToken) {
-            const {
-                id: creditCardIdFromToken, 
-                creditCardNumber: creditCardNumberFromToken,
-                expiration: expirationFromToken,
-                cvv: cvvFromToken
-            } = creditCardToken?.creditCard
-            const {payeeName, payeeId, amount} = request.body
-
-            const creditCard = await getCreditCard(creditCardIdFromToken)
-        
-            // vérifier le contenu 
-            if(!creditCard) {
-                return reply.status(notFound).send({error: 'Credit card not found'})
-            }
-
-            const isCreditCardValid = await isCreditCardCredentialsOk(creditCardIdFromToken, creditCardNumberFromToken, expirationFromToken, cvvFromToken)
-
-            if(isCreditCardValid) {
-                const currentDate = new Date()
-                const isDateValid = compareDateForCreditCard(currentDate, expirationFromToken)
-                if(isDateValid) {
-                    const transactionInfo = {
-                        payeeName,
-                        payeeId,
-                        amount,
-                        creditCardId: creditCardIdFromToken
+        if(request.creditCard) {
+            const creditCardToken = request.creditCard.creditCard
+    
+            if(creditCardToken) {
+                const {
+                    id: creditCardIdFromToken, 
+                    creditCardNumber: creditCardNumberFromToken,
+                    expiration: expirationFromToken,
+                    cvv: cvvFromToken
+                } = creditCardToken
+                const {payeeName, payeeId, amount} = request.body
+    
+                const creditCard = await getCreditCard(creditCardIdFromToken)
+            
+                // vérifier le contenu 
+                if(!creditCard) {
+                    return reply.status(notFound).send({error: 'Credit card not found'})
+                }
+    
+                const isCreditCardValid = await isCreditCardCredentialsOk(creditCardIdFromToken, creditCardNumberFromToken, expirationFromToken, cvvFromToken)
+    
+                if(isCreditCardValid) {
+                    const currentDate = new Date()
+                    const isDateValid = compareDateForCreditCard(currentDate, expirationFromToken)
+                    if(isDateValid) {
+                        const transactionInfo = {
+                            payeeName,
+                            payeeId,
+                            amount,
+                            creditCardId: creditCardIdFromToken
+                        }
+                        const transaction = await createTransaction(transactionInfo)
+            
+                        return reply.send(transaction)
+                    } else {
+                        const desactiveCard = creditCardDesactivation(creditCardIdFromToken)
+                        return reply.code(serverError).send("Credit card is expired")
                     }
-                    const transaction = await createTransaction(transactionInfo)
-        
-                    return reply.send(transaction)
                 } else {
-                    const desactiveCard = creditCardDesactivation(creditCardIdFromToken)
-                    return reply.code(serverError).send("Credit card is expired")
+                    return reply.code(unauthorized).send(permDenied)
                 }
             } else {
                 return reply.code(unauthorized).send(permDenied)
             }
         } else {
-            return reply.code(unauthorized).send(permDenied)
+            return reply.code(serverError).send({error: 'Server error'})
         }
-
     } catch (e) {
         return reply.code(serverError).send(e)
     }

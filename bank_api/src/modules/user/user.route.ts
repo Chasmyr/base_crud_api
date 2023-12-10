@@ -20,7 +20,7 @@ async function userRoutes(server:FastifyInstance) {
     }, deleteHandler)
 
     // update user
-    server.put('/update/:id', {
+    server.put('/:id', {
         preHandler: [server.authenticate],
         schema: {
             response: {

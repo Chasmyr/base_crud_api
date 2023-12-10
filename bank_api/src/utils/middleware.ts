@@ -9,9 +9,15 @@ export function idAndRoleMiddleware(ids: idMiddlewareInput, self: boolean, currR
     }
 
     if(roles.length > 0) {
-        roles.map((role) => {
-            isAuthorize = isAuthorize && currRole === role
-        })
+        if(self) {
+            roles.map((role) => {
+                isAuthorize = isAuthorize || currRole === role
+            })
+        } else {
+            roles.map((role) => {
+                isAuthorize = isAuthorize && currRole === role
+            })
+        }
     }
 
     return isAuthorize

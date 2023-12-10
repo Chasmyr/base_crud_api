@@ -1,0 +1,398 @@
+TAP version 14
+# Subtest: GET `/api/users/`
+    1..0
+ok 1 - GET `/api/users/` # time=60.099ms
+
+[
+  {
+    email: 'Kaitlin.Predovic@hotmail.com',
+    firstName: 'Kaitlin',
+    lastName: 'Rohan',
+    role: 'client',
+    id: 239
+  },
+  {
+    email: 'Amelie_Homenick95@gmail.com',
+    firstName: 'Amelie',
+    lastName: 'Hand',
+    role: 'client',
+    id: 240
+  },
+  {
+    email: 'Andre_Kuvalis8@hotmail.com',
+    firstName: 'Andre',
+    lastName: 'Jast',
+    role: 'client',
+    id: 242
+  },
+  {
+    email: 'Lily_Lind@gmail.com',
+    firstName: 'Lily',
+    lastName: 'Veum',
+    role: 'client',
+    id: 243
+  },
+  {
+    email: 'Kip70@yahoo.com',
+    firstName: 'Kip',
+    lastName: 'Hoeger',
+    role: 'employee',
+    id: 244
+  },
+  {
+    email: 'Maurice90@gmail.com',
+    firstName: 'Maurice',
+    lastName: 'Emard',
+    role: 'client',
+    id: 245
+  },
+  {
+    email: 'Emmalee41@yahoo.com',
+    firstName: 'test',
+    lastName: 'Grimes',
+    role: 'client',
+    id: 246
+  },
+  {
+    email: 'Marvin_Jerde-Klein6@yahoo.com',
+    firstName: 'Marvin',
+    lastName: 'Thiel',
+    role: 'admin',
+    id: 247
+  },
+  {
+    email: 'Rupert.Greenholt66@hotmail.com',
+    firstName: 'Rupert',
+    lastName: "O'Conner",
+    role: 'client',
+    id: 248
+  },
+  {
+    email: 'Cecil_Hansen74@yahoo.com',
+    firstName: 'Cecil',
+    lastName: 'Ratke',
+    role: 'client',
+    id: 249
+  },
+  {
+    email: 'Jordan_Erdman@gmail.com',
+    firstName: 'Jordan',
+    lastName: 'Hansen',
+    role: 'employee',
+    id: 250
+  },
+  {
+    email: 'Salma_Morar83@gmail.com',
+    firstName: 'Salma',
+    lastName: 'Wintheiser',
+    role: 'admin',
+    id: 251
+  },
+  {
+    email: 'Jamison_Jones@yahoo.com',
+    firstName: 'Jamison',
+    lastName: 'Hartmann',
+    role: 'client',
+    id: 252
+  },
+  {
+    email: 'Bud.Gutmann53@hotmail.com',
+    firstName: 'Bud',
+    lastName: 'Marks',
+    role: 'client',
+    id: 253
+  },
+  {
+    email: 'London40@gmail.com',
+    firstName: 'London',
+    lastName: 'Rice',
+    role: 'client',
+    id: 254
+  },
+  {
+    email: 'Steve.Prohaska@hotmail.com',
+    firstName: 'Steve',
+    lastName: 'Nolan',
+    role: 'client',
+    id: 256
+  },
+  {
+    email: 'Shayna_Harvey-Prohaska@hotmail.com',
+    firstName: 'Shayna',
+    lastName: 'Cormier',
+    role: 'client',
+    id: 258
+  },
+  {
+    email: 'Fatima_Paucek@yahoo.com',
+    firstName: 'test',
+    lastName: 'Parisian',
+    role: 'client',
+    id: 257
+  },
+  {
+    email: 'Taurean5@hotmail.com',
+    firstName: 'Taurean',
+    lastName: 'Erdman',
+    role: 'employee',
+    id: 259
+  },
+  {
+    email: 'Karlie_OHara@yahoo.com',
+    firstName: 'Karlie',
+    lastName: 'Zulauf',
+    role: 'client',
+    id: 260
+  },
+  {
+    email: 'Americo.Pfannerstill23@yahoo.com',
+    firstName: 'Americo',
+    lastName: 'Bins',
+    role: 'admin',
+    id: 261
+  },
+  {
+    email: 'Ahmad_Beer@gmail.com',
+    firstName: 'Ahmad',
+    lastName: 'Cruickshank',
+    role: 'client',
+    id: 262
+  },
+  {
+    email: 'Janelle.Williamson72@yahoo.com',
+    firstName: 'Janelle',
+    lastName: 'Renner',
+    role: 'employee',
+    id: 263
+  },
+  {
+    email: 'Austyn_Douglas@yahoo.com',
+    firstName: 'Austyn',
+    lastName: 'Harris',
+    role: 'client',
+    id: 264
+  },
+  {
+    email: 'Earline44@hotmail.com',
+    firstName: 'Earline',
+    lastName: 'Krajcik',
+    role: 'admin',
+    id: 265
+  },
+  {
+    email: 'Shanelle99@hotmail.com',
+    firstName: 'Shanelle',
+    lastName: 'Wintheiser-Hudson',
+    role: 'client',
+    id: 266
+  },
+  {
+    email: 'Nyah.OReilly52@hotmail.com',
+    firstName: 'Nyah',
+    lastName: 'Haag',
+    role: 'client',
+    id: 267
+  },
+  {
+    email: 'Roxane40@gmail.com',
+    firstName: 'Roxane',
+    lastName: 'Spinka',
+    role: 'client',
+    id: 268
+  },
+  {
+    email: 'Aubree_Howe@hotmail.com',
+    firstName: 'Aubree',
+    lastName: 'Runolfsson',
+    role: 'client',
+    id: 270
+  },
+  {
+    email: 'Yoshiko.Paucek@hotmail.com',
+    firstName: 'Yoshiko',
+    lastName: 'Beier',
+    role: 'client',
+    id: 272
+  },
+  {
+    email: 'Abbigail_Williamson12@gmail.com',
+    firstName: 'test',
+    lastName: 'Schaefer',
+    role: 'client',
+    id: 271
+  },
+  {
+    email: 'Angeline.Johns@yahoo.com',
+    firstName: 'Angeline',
+    lastName: 'Cassin',
+    role: 'client',
+    id: 276
+  },
+  {
+    email: 'Enrico4@hotmail.com',
+    firstName: 'Enrico',
+    lastName: 'Jacobson',
+    role: 'employee',
+    id: 273
+  },
+  {
+    email: 'Joan40@gmail.com',
+    firstName: 'Joan',
+    lastName: 'Beier',
+    role: 'admin',
+    id: 277
+  },
+  {
+    email: 'Freeman.Erdman@yahoo.com',
+    firstName: 'Freeman',
+    lastName: 'Streich',
+    role: 'client',
+    id: 274
+  },
+  {
+    email: 'Alexanne_Reinger@gmail.com',
+    firstName: 'Alexanne',
+    lastName: 'Kulas',
+    role: 'client',
+    id: 275
+  },
+  {
+    email: 'Joan.Bosco@gmail.com',
+    firstName: 'Joan',
+    lastName: 'Murray',
+    role: 'employee',
+    id: 278
+  },
+  {
+    email: 'Monserrate68@gmail.com',
+    firstName: 'Monserrate',
+    lastName: 'Berge',
+    role: 'admin',
+    id: 279
+  },
+  {
+    email: 'Kamren_Kuphal@hotmail.com',
+    firstName: 'Kamren',
+    lastName: 'Baumbach',
+    role: 'client',
+    id: 280
+  },
+  {
+    email: 'Paul.Fay@yahoo.com',
+    firstName: 'Paul',
+    lastName: 'Powlowski',
+    role: 'client',
+    id: 281
+  },
+  {
+    email: 'Kylee_Pfeffer@gmail.com',
+    firstName: 'Kylee',
+    lastName: 'Ortiz',
+    role: 'client',
+    id: 282
+  },
+  {
+    email: 'Allan32@gmail.com',
+    firstName: 'Allan',
+    lastName: 'Funk',
+    role: 'client',
+    id: 284
+  },
+  {
+    email: 'Isabel15@yahoo.com',
+    firstName: 'Isabel',
+    lastName: 'Aufderhar',
+    role: 'employee',
+    id: 285
+  },
+  {
+    email: 'Jedediah_Lebsack95@hotmail.com',
+    firstName: 'Jedediah',
+    lastName: 'Connelly',
+    role: 'client',
+    id: 287
+  },
+  {
+    email: 'Lincoln_Cole42@gmail.com',
+    firstName: 'test',
+    lastName: 'Lemke',
+    role: 'client',
+    id: 286
+  },
+  {
+    email: 'Gloria24@yahoo.com',
+    firstName: 'Gloria',
+    lastName: 'Harvey',
+    role: 'admin',
+    id: 288
+  },
+  {
+    email: 'Sidney67@yahoo.com',
+    firstName: 'Sidney',
+    lastName: 'Yost-Hayes',
+    role: 'client',
+    id: 289
+  },
+  {
+    email: 'Loma_Pacocha@hotmail.com',
+    firstName: 'Loma',
+    lastName: 'Bednar',
+    role: 'client',
+    id: 290
+  },
+  {
+    email: 'Adolfo.Anderson20@yahoo.com',
+    firstName: 'Adolfo',
+    lastName: 'Cartwright',
+    role: 'employee',
+    id: 291
+  },
+  {
+    email: 'Kyleigh99@gmail.com',
+    firstName: 'Kyleigh',
+    lastName: 'Veum',
+    role: 'client',
+    id: 292
+  },
+  {
+    email: 'Grayce39@gmail.com',
+    firstName: 'Grayce',
+    lastName: 'DuBuque',
+    role: 'admin',
+    id: 293
+  },
+  {
+    email: 'Helena.Stokes@yahoo.com',
+    firstName: 'Helena',
+    lastName: 'Abernathy',
+    role: 'client',
+    id: 294
+  },
+  {
+    email: 'Daren11@yahoo.com',
+    firstName: 'Daren',
+    lastName: 'Mueller',
+    role: 'client',
+    id: 295
+  },
+  {
+    email: 'Bernice_Mayer35@gmail.com',
+    firstName: 'Bernice',
+    lastName: 'Abbott',
+    role: 'client',
+    id: 296
+  },
+  {
+    email: 'Jana.Medhurst26@yahoo.com',
+    firstName: 'Jana',
+    lastName: 'Lemke',
+    role: 'client',
+    id: 297
+  }
+]
+false
+# Subtest: get all users successfully
+    1..0
+ok 2 - get all users successfully # time=448.063ms
+
+1..2

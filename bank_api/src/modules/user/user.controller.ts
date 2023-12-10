@@ -52,23 +52,26 @@ export async function loginHandler(request:FastifyRequest<{
 export async function deleteHandler(request:FastifyRequest<{
     Params: {id: string}
 }>, reply: FastifyReply) {
-
-    const {id: idFromToken, role: roleFromToken} = request.user
-    const userId = Number(request.params.id)
-    
+        
     try {
-        if(idAndRoleMiddleware({id1: idFromToken, id2: userId}, true, roleFromToken, ['admin'])) {
-            const existingUser = await getUser(userId)
-    
-            if(!existingUser) {
-                return reply.status(notFound).send({error: 'User not found'})
+        if(request.user) {
+            const {id: idFromToken, role: roleFromToken} = request.user
+            const userId = Number(request.params.id)
+            if(idAndRoleMiddleware({id1: idFromToken, id2: userId}, true, roleFromToken, ['admin'])) {
+                const existingUser = await getUser(userId)
+        
+                if(!existingUser) {
+                    return reply.status(notFound).send({error: 'User not found'})
+                }
+        
+                const message = await deleteUser(userId)
+        
+                return reply.send(message)
+            } else {
+                return reply.code(unauthorized).send({error: 'Permission denied'})
             }
-    
-            const message = await deleteUser(userId)
-    
-            return reply.send(message)
         } else {
-            return reply.code(unauthorized).send({error: 'Permission denied'})
+            return reply.code(serverError).send({error: 'Server error'})
         }
     } catch(e) {
         return reply.code(serverError).send(e)
@@ -80,28 +83,31 @@ export async function updateHandler(request: FastifyRequest<{
     User: UserRequestSchema,
     Params: {id: string}
 }>, reply: FastifyReply) {
-
-    const {id: idFromToken, role: roleFromToken} = request.user
-    const userId = Number(request.params.id)
-
+    
     try {
-        if(idAndRoleMiddleware({id1: idFromToken, id2: userId}, true, roleFromToken, ['admin'])) {
-            const existingUser = await getUser(userId)
-    
-            if(!existingUser) {
-                return reply.status(notFound).send({error: 'User not found'})
+        if(request.user) {
+            const {id: idFromToken, role: roleFromToken} = request.user
+            const userId = Number(request.params.id)
+            if(idAndRoleMiddleware({id1: idFromToken, id2: userId}, true, roleFromToken, ['admin'])) {
+                const existingUser = await getUser(userId)
+        
+                if(!existingUser) {
+                    return reply.status(notFound).send({error: 'User not found'})
+                }
+        
+                const updatedUser = await updateUser(userId, request.body)
+        
+                return reply.send(updatedUser)
+            } else {
+                return reply.code(unauthorized).send({error: 'Permission denied'})
             }
-    
-            const updatedUser = await updateUser(userId, request.body)
-    
-            return reply.send(updatedUser)
         } else {
-            return reply.code(unauthorized).send({error: 'Permission denied'})
+            reply.code(serverError).send({error: 'Server error'})
         }
     } catch(e) {
         return reply.code(serverError).send(e)
     }
-}
+} 
 
 export async function getUsersHandler() {
     const users = await findUsers()

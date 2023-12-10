@@ -6,13 +6,18 @@ import { created, notFound, serverError, unauthorized } from "../../utils/const"
 export async function createBankAccountHandler(request: FastifyRequest<{
     Body: CreateBankAccountInput
 }>, reply: FastifyReply) {
+
     try {
-        const bankAccount = await createBankAccount({
-            ...request.body,
-            ownerId: request.user.id
-        })
-    
-        return reply.code(created).send(bankAccount)
+        if(request.authenticate) {
+            const bankAccount = await createBankAccount({
+                ...request.body,
+                ownerId: request.authenticate.user.id
+            })
+        
+            return reply.code(created).send(bankAccount)
+        } else {
+            return reply.code(serverError).send({error: 'Server error'})
+        }
     } catch(e) {
         return reply.code(serverError).send(e)
     }
@@ -23,28 +28,30 @@ export async function deleteHandler(request:FastifyRequest<{
     Params: {id: string}
 }>, reply: FastifyReply) {
 
-    const {id: idFromToken, role: roleFromToken} = request.user
-    const bankAccountId = Number(request.params.id)
-    
-    try {
-        
-        const bankAccount = await getBankAccount(bankAccountId)
-        
-        if(!bankAccount) {
-            return reply.status(notFound).send({error: 'Bank account not found'})
-        } 
-            
-        if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
-                
-            const message = await deleteBankAccount(bankAccountId)
-
-            return reply.send(message)
-        } else {
-            return reply.code(unauthorized).send({error: 'Permission denied'})
-        }
-    } catch(e) {
-        return reply.code(serverError).send(e)
-    }
+   try {
+       if(request.authenticate) {
+           const {id: idFromToken, role: roleFromToken} = request.authenticate.user
+           const bankAccountId = Number(request.params.id)
+           const bankAccount = await getBankAccount(bankAccountId)
+           
+           if(!bankAccount) {
+               return reply.status(notFound).send({error: 'Bank account not found'})
+           } 
+               
+           if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
+                   
+               const message = await deleteBankAccount(bankAccountId)
+   
+               return reply.send(message)
+           } else {
+               return reply.code(unauthorized).send({error: 'Permission denied'})
+           }
+       } else {
+           reply.code(serverError).send({error: 'Server error'})
+       }
+   } catch(e) {
+       return reply.code(serverError).send(e)
+   }
 }
 
 // update bankaccount
@@ -53,29 +60,31 @@ export async function updateHandler(request: FastifyRequest<{
     Body: BankAccountUpdateSchema
 }>, reply: FastifyReply) {
 
-    const {id: idFromToken, role: roleFromToken} = request.user
-    const bankAccountId = Number(request.params.id)
-
     try {
+        if(request.authenticate) {
+            const {id: idFromToken, role: roleFromToken} = request.authenticate.user
+            const bankAccountId = Number(request.params.id)
+            const bankAccount = await getBankAccount(bankAccountId)
 
-        const bankAccount = await getBankAccount(bankAccountId)
-
-        if(!bankAccount) {
-            return reply.status(notFound).send({error: 'Bank account not found'})
-        }
-        
-        if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
+            if(!bankAccount) {
+                return reply.status(notFound).send({error: 'Bank account not found'})
+            }
             
-            const updatedBankAccount = await updateBankAccount(bankAccountId, request.body)
-        
-            return reply.send(updatedBankAccount)
+            if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
+                
+                const updatedBankAccount = await updateBankAccount(bankAccountId, request.body)
+            
+                return reply.send(updatedBankAccount)
+            } else {
+                return reply.code(unauthorized).send({error: 'Permission denied'})
+            }
         } else {
-            return reply.code(unauthorized).send({error: 'Permission denied'})
+            reply.code(serverError).send({error: 'Server error'})
         }
     } catch(e) {
         return reply.code(serverError).send(e)
-    }    
-}
+    } 
+}  
 
 export async function getBankAccountsHandler() {
     const products = await getBankAccounts()

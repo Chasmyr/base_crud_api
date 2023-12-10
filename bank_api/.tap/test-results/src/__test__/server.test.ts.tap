@@ -1,0 +1,8 @@
+TAP version 14
+# Subtest: requests the `/healthcheck` route
+    ok 1 - should be equal
+    ok 2 - should be equivalent
+    1..2
+ok 1 - requests the `/healthcheck` route # time=329.844ms
+
+1..1
