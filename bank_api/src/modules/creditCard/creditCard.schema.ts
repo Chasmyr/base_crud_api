@@ -4,9 +4,6 @@ import {buildJsonSchemas} from 'fastify-zod'
 const createCreditCardSchema = z.object({
     expiration: z.string({
         required_error: 'Expiration date is required',
-    }),
-    accountId: z.number({
-        required_error: 'Account id is required',
     })
 })
 

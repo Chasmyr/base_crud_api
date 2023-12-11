@@ -2,19 +2,34 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { createBankAccount, deleteBankAccount, getBankAccount, getBankAccounts, updateBankAccount } from "./bankAccount.service";
 import { BankAccountUpdateSchema, CreateBankAccountInput } from "./bankAccount.schema";
 import { created, notFound, serverError, unauthorized } from "../../utils/const";
+import { getUser } from "../user/user.service";
 
 export async function createBankAccountHandler(request: FastifyRequest<{
-    Body: CreateBankAccountInput
+    Body: CreateBankAccountInput,
+    Params: {id: string}
 }>, reply: FastifyReply) {
 
     try {
         if(request.user) {
-            const bankAccount = await createBankAccount({
-                ...request.body,
-                ownerId: request.user.id
-            })
-        
-            return reply.code(created).send(bankAccount)
+            const {role: roleFromToken} = request.user
+            const userClientId = Number(request.params.id)
+            
+            const userExist = getUser(userClientId)
+
+            if(!userExist) {
+                return reply.send(notFound).send({error: 'User not found'})
+            }
+
+            if(roleFromToken === 'admin' || roleFromToken === 'employee') {
+                const bankAccount = await createBankAccount({
+                    ...request.body,
+                    ownerId: userClientId
+                })
+            
+                return reply.code(created).send(bankAccount)
+            } else {
+                return reply.code(unauthorized).send({error: 'Permission denied'})
+            }
         } else {
             return reply.code(serverError).send({error: 'Server error'})
         }
@@ -30,28 +45,29 @@ export async function deleteHandler(request:FastifyRequest<{
 
    try {
        if(request.user) {
-           const {id: idFromToken, role: roleFromToken} = request.user
-           const bankAccountId = Number(request.params.id)
-           const bankAccount = await getBankAccount(bankAccountId)
+            // TODO - ajouter la desactivation des cartes relatives a ce bank account
+            const {id: idFromToken, role: roleFromToken} = request.user
+            const bankAccountId = Number(request.params.id)
+            const bankAccount = await getBankAccount(bankAccountId)
            
-           if(!bankAccount) {
+            if(!bankAccount) {
                return reply.status(notFound).send({error: 'Bank account not found'})
-           } 
+            } 
                
-           if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
+            if(idFromToken === bankAccount?.ownerId || roleFromToken === 'admin' || roleFromToken === 'employee') {
                    
                const message = await deleteBankAccount(bankAccountId)
    
                return reply.send(message)
-           } else {
+            } else {
                return reply.code(unauthorized).send({error: 'Permission denied'})
-           }
-       } else {
+            }
+        } else {
            reply.code(serverError).send({error: 'Server error'})
-       }
-   } catch(e) {
+        }
+    } catch(e) {
        return reply.code(serverError).send(e)
-   }
+    }
 }
 
 // update bankaccount
@@ -87,6 +103,7 @@ export async function updateHandler(request: FastifyRequest<{
 }  
 
 export async function getBankAccountsHandler() {
+    // TODO - ajouter verif JWT et get un bank account par id
     const products = await getBankAccounts()
 
     return products

@@ -3,15 +3,16 @@ import { createFakeUser, createFakeBankAccount } from "../../../../utils/testUti
 import buildServer from "../../../../server"
 import prisma from '../../../../utils/prisma'
 
-test('POST `/api/bankaccounts/:id`', async (t) => {
+test('GET `/api/creditcards/:id`', async (t) => {
 
     t.beforeEach(async () => {
+        await prisma.creditCard.deleteMany({})
         await prisma.bankAccount.deleteMany({})
         await prisma.user.deleteMany({})
     })
 
-    test('create bank account successfully', async (t) => {
-        // créer un user
+    test('get a credit card successfully', async (t) => {
+
         const user = createFakeUser('admin')
         const fastify = buildServer()
 
@@ -28,7 +29,6 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
         })
         const userId = createUserResponse.json().id
 
-        // s'authentifier
         const loginResponse = await fastify.inject({
             method: "POST",
             url: '/api/users/login',
@@ -40,7 +40,6 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
 
         const token = loginResponse.json().accessToken
 
-        // lui aussi un bank account
         const {balance, overdraft} = createFakeBankAccount()
         const createBankAccountResponse = await fastify.inject({
             method: "POST",
@@ -54,63 +53,39 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
             }
         })
 
+        const accountId = createBankAccountResponse.json().id
+
         // test le status code
-        t.equal(createBankAccountResponse.statusCode, 201)
-        const json = createBankAccountResponse.json()
-        t.equal(json.balance, balance)
-        t.equal(json.overdraft, overdraft)
-    })
-    
-    test('fail to create bank account because the user is not found', async (t) => {
-        // créer un user
-        const user = createFakeUser('admin')
-        const fastify = buildServer()
-
-        const createUserResponse = await fastify.inject({
+        const expiration = '09/28'
+        const createCreditCardResponse = await fastify.inject({
             method: "POST",
-            url: '/api/users',
+            url: `/api/creditcards/${accountId}`,
             payload: {
-                email: user.email,
-                password: user.password,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                role: user.role
-            }
-        })
-
-        // s'authentifier
-        const loginResponse = await fastify.inject({
-            method: "POST",
-            url: '/api/users/login',
-            payload: {
-                email: user.email,
-                password: user.password
-            }
-        })
-
-        const token = loginResponse.json().accessToken
-
-        // lui aussi un bank account
-        const {balance, overdraft} = createFakeBankAccount()
-        const createBankAccountResponse = await fastify.inject({
-            method: "POST",
-            url: `/api/bankaccounts/0`,
-            payload: {
-                balance,
-                overdraft
+                expiration: expiration
             },
             headers: {
                 authorization: `Bearer ${token}`
             }
         })
 
-        // test le status code
-        t.equal(createBankAccountResponse.statusCode, 500)
+        const creditCardId = createCreditCardResponse.json().id
+
+        const getCreditCard = await fastify.inject({
+            method: "GET",
+            url: `/api/creditcards/${creditCardId}`,
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+
+        t.equal(getCreditCard.statusCode, 200)
+        const json = getCreditCard.json()
+        t.equal(json.expiration, expiration)
     })
 
-    test('fail to create bank account because the role is incorrect', async (t) => {
-        // créer un user
-        const user = createFakeUser('client')
+    test('fail to get a credit card because the credit card is not found', async (t) => {
+
+        const user = createFakeUser('admin')
         const fastify = buildServer()
 
         const createUserResponse = await fastify.inject({
@@ -126,7 +101,6 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
         })
         const userId = createUserResponse.json().id
 
-        // s'authentifier
         const loginResponse = await fastify.inject({
             method: "POST",
             url: '/api/users/login',
@@ -138,7 +112,68 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
 
         const token = loginResponse.json().accessToken
 
-        // lui aussi un bank account
+        const getCreditCard = await fastify.inject({
+            method: "GET",
+            url: `/api/creditcards/0`,
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+
+        t.equal(getCreditCard.statusCode, 404)
+    })
+
+    test('fail to get a credit card because the role is incorrect', async (t) => {
+
+        const user = createFakeUser('admin')
+        const user2 = createFakeUser('client')
+        const fastify = buildServer()
+
+        const createUserResponse = await fastify.inject({
+            method: "POST",
+            url: '/api/users',
+            payload: {
+                email: user.email,
+                password: user.password,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role
+            }
+        })
+        await fastify.inject({
+            method: "POST",
+            url: '/api/users',
+            payload: {
+                email: user2.email,
+                password: user2.password,
+                firstName: user2.firstName,
+                lastName: user2.lastName,
+                role: user2.role
+            }
+        })
+        const userId = createUserResponse.json().id
+
+        const loginResponse = await fastify.inject({
+            method: "POST",
+            url: '/api/users/login',
+            payload: {
+                email: user.email,
+                password: user.password
+            }
+        })
+
+        const loginResponse2 = await fastify.inject({
+            method: "POST",
+            url: '/api/users/login',
+            payload: {
+                email: user2.email,
+                password: user2.password
+            }
+        })
+
+        const token = loginResponse.json().accessToken
+        const token2 = loginResponse2.json().accessToken
+
         const {balance, overdraft} = createFakeBankAccount()
         const createBankAccountResponse = await fastify.inject({
             method: "POST",
@@ -151,7 +186,31 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
                 authorization: `Bearer ${token}`
             }
         })
+
+        const accountId = createBankAccountResponse.json().id
+
         // test le status code
-        t.equal(createBankAccountResponse.statusCode, 401)
+        const createCreditCardResponse = await fastify.inject({
+            method: "POST",
+            url: `/api/creditcards/${accountId}`,
+            payload: {
+                expiration: '09/28'
+            },
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+
+        const creditCardId = createCreditCardResponse.json().id
+
+        const getCreditCard = await fastify.inject({
+            method: "GET",
+            url: `/api/creditcards/${creditCardId}`,
+            headers: {
+                authorization: `Bearer ${token2}`
+            }
+        })
+
+        t.equal(getCreditCard.statusCode, 401)
     })
 })

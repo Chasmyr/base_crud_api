@@ -12,8 +12,7 @@ export async function createTransactionHandler(request: FastifyRequest<{
 
     // récup les données
     try {
-        if(request.creditCard) {
-            const creditCardToken = request.creditCard.creditCard
+        if(request.user) {
     
             if(creditCardToken) {
                 const {

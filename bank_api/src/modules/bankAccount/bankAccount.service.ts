@@ -20,7 +20,6 @@ export async function deleteBankAccount(id: number) {
 }
 
 export async function updateBankAccount(id: number, body: BankAccountUpdateSchema) {
-
     const updatedBankAccount = await prisma.bankAccount.update({
         where: {id: id},
         data: body

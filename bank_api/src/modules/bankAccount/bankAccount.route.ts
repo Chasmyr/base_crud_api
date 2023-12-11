@@ -5,7 +5,7 @@ import { $ref, bankAccountSchemas } from "./bankAccount.schema";
 async function bankAccountRoutes(server: FastifyInstance) {
 
     // create bank account
-    server.post('/', {
+    server.post('/:id', {
         preHandler: [server.authenticate],
         schema: {
             body: $ref('createBankAccountSchema'),

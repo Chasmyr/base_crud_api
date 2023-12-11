@@ -4,7 +4,7 @@ import { CreateCreditCardInput } from "./creditCard.schema";
 import { FastifyRequest } from "fastify";
 import CryptoJS from "crypto-js"
 
-export async function createCreditCard(input: CreateCreditCardInput){
+export async function createCreditCard(input: CreateCreditCardInput & {accountId: number}){
 
     const {expiration, accountId} = input
 
@@ -61,7 +61,7 @@ export async function creditCardActivation(request: FastifyRequest, id: number) 
             where: {id: id},
             data: toUpdate
         })
-        return {"message": `The credit card with id ${id} is active`}
+        return updatedCreditCard
     } else if (creditCard?.isActive) {
         return {"message": `The credit card with id ${id} is already active`}
     } else {
@@ -82,7 +82,7 @@ export async function creditCardDesactivation(id: number) {
             where: {id: id},
             data: toUpdate
         })
-        return {"message": `The credit card with id ${id} has been desactivated`}
+        return updatedCreditCard
     } else {
         return {"message": `The credit card with id ${id} can't be desactivated`}
     }

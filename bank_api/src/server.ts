@@ -21,22 +21,18 @@ declare module "fastify" {
 }
 
 interface UserToken {
-    user: {
-        "email": string,
-        "firstName": string,
-        "lastName": string,
-        "id": number,
-        "role": string
-    }
+    "email": string,
+    "firstName": string,
+    "lastName": string,
+    "id": number,
+    "role": string
 }
 
 interface CreditCardToken {
-    creditCard: {
-        "creditCardNumber": string,
-        "expiration": string,
-        "cvv": number,
-        "id": number
-    }
+    "creditCardNumber": string,
+    "expiration": string,
+    "cvv": number,
+    "id": number
 }
 
 function buildServer(): FastifyInstance {

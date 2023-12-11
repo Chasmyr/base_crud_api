@@ -1,7 +1,7 @@
 TAP version 14
 # Subtest: PUT `/api/users/:id`
     1..0
-ok 1 - PUT `/api/users/:id` # time=133.769ms
+ok 1 - PUT `/api/users/:id` # time=97.619ms
 
 # Subtest: update a user successfully
     ok 1 - should be equal
@@ -11,17 +11,17 @@ ok 1 - PUT `/api/users/:id` # time=133.769ms
     ok 5 - should be equal
     ok 6 - should be equal
     1..6
-ok 2 - update a user successfully # time=464.216ms
+ok 2 - update a user successfully # time=227.978ms
 
 # Subtest: fail to update because the role or the id is incorrect
     ok 1 - should be equal
     1..1
-ok 3 - fail to update because the role or the id is incorrect # time=185.638ms
+ok 3 - fail to update because the role or the id is incorrect # time=104.013ms
 
 # Subtest: fail to delete a user because the user dont exist
     ok 1 - should be equal
     ok 2 - should be equal
     1..2
-ok 4 - fail to delete a user because the user dont exist # time=141.295ms
+ok 4 - fail to delete a user because the user dont exist # time=84.166ms
 
 1..4
