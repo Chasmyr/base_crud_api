@@ -15,6 +15,7 @@ async function productRoutes(server: FastifyInstance) {
         }
     }, createProductHandler)
 
+
     // Get All products
     server.get('/', {
         schema: {
@@ -24,6 +25,7 @@ async function productRoutes(server: FastifyInstance) {
         }
     }, getAllProductsHandler)
 
+    
     //  Get Details of product 
     server.get('/:productId', {
         schema: {

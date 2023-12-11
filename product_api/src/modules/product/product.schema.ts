@@ -19,7 +19,7 @@ const createProductSchema = z.object({
 })
 
 const getAllProductsSchema = z.object({
-    ...productOutput
+    ...productOutput,
 })
 
 const productResponseSchema = z.object({
