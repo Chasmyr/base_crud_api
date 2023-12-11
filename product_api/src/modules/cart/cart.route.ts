@@ -1,67 +1,64 @@
 import { FastifyInstance } from "fastify";
-import { getAllCartsHandler, addProductToCartHandler, removeProductHandler, removeAllProductsHandler, validateCartHandler, deleteCartHandler } from "./cart.controller";
+import { createCartHandler, validateCartHandler, getAllCartsHandler, deleteAllProductFromCartHandler, deleteCartHandler } from "./cart.controller";
 import { $ref } from "./cart.schema";
 
+
 async function cartRoutes(server: FastifyInstance) {
+
+    //Create Cart
+    server.post('/' , {
+        preHandler: [server.authenticate],
+        schema: {
+            body: $ref('postCartBodySchema'),
+            response: {
+                201: $ref('getCartSchema')
+            }
+        }
+    }, createCartHandler)
+
+    // Validate Cart / Go to Cart
+    server.post('/:cartId/validate', {
+        schema: {
+            params: $ref('validateCartParamsSchema'),
+            body: $ref('validateCartBodySchema'),
+            response: {
+                201: $ref('cartResponseSchema')
+            }
+        }
+    }, validateCartHandler);
 
     // Get All cart by user
     server.get('/:userId', {
         schema: {
-            params: $ref('getCartsSchema'),
+            params: $ref('getCartSchema'),
             response: {
-                201: $ref('cartResponseSchema')
+                201: $ref('getCartProductsSchema')
             }
         }
     }, getAllCartsHandler)
 
 
-    // Add product to Cart
-    server.post('/:cartId/products/:productId', {
-        preHandler: [server.authenticate],
-        schema: {
-            body: $ref('getCartsSchema'),
-            params: $ref('getCartProductSchema'),
-            response: {
-                201: $ref('cartResponseSchema')
-            }
-        }
-    }, addProductToCartHandler)
-
-
-    // Remove product
-    server.delete('/:cartId/products/:productId', {
-        schema: {
-            params: $ref('getCartProductSchema'),
-            response: {}
-        } 
-    }, removeProductHandler);
-
-
-    // Remove All Product 
+    // Remove All Product / Back Button
     server.delete('/:cartId/products/', {
         schema: {
-            params: $ref('removeAllProductsFromCartSchema'),
+            params: $ref('removeAllProductsFromCartParamsSchema'),
             response: {}
         } 
-    }, removeAllProductsHandler);
+    }, deleteAllProductFromCartHandler);
 
+
+    // Payment Cart
+
+
+    
 
     // Delete Cart
     server.delete('/:cartId', {
         schema: {
-            params: $ref('removeAllProductsFromCartSchema'),
+            params: $ref('removeAllProductsFromCartParamsSchema'),
             response: {}
         } 
     }, deleteCartHandler);
-
-    
-    // Validate Cart
-    server.post('/:cartId/validate', {
-        schema: {
-            params: $ref('validateCartSchema'),
-            response: {}
-        }
-    }, validateCartHandler);
 }
 
 export default cartRoutes

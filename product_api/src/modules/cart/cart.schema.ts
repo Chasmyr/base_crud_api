@@ -1,28 +1,56 @@
-import {z} from 'zod'
+import {number, z} from 'zod'
 import {buildJsonSchemas} from 'fastify-zod'
+import { cartItemSchema } from '../cartItems/cartItems.schema';
 
 
+// OK
 const cartInput = {
     userId: z.number(),
     status: z.boolean().optional()
 }
 
-const getCartsSchema = z.object({
-    userId: z.number()
+// Ok post Cart
+const postCartBodySchema = z.object({
+    ...cartInput
 })
 
-const getCartProductSchema = z.object({
-    cartId: z.number(),
-    productId: z.number()
-})
-
-const removeAllProductsFromCartSchema = z.object({
+// Ok post Cart
+const getCartSchema = z.object({
+    ...cartInput,
     cartId: z.number(),
 })
 
-const validateCartSchema = z.object({
+// Recuperer info d'un panier
+const getCartProductsSchema = z.object({
+    id: z.number(), 
+    status: z.boolean(),
+    userId: z.number(),
+    cartItems: z.array(cartItemSchema),
+})
+
+const addQuantityProductBodySchema = z.object ({
+    quantity: number(),
+})
+
+const addProductToCartParamsSchema = z.object ({
+    cartId: number(),
+    productId: number(),
+})
+
+const removeAllProductsFromCartParamsSchema = z.object({
     cartId: z.number(),
 })
+
+const validateCartParamsSchema = z.object({
+    cartId: z.number(),
+})
+
+const validateCartBodySchema = z.object({
+    products: z.array(z.object({
+      productId: z.number(),
+      quantity: z.number().min(1),
+    })),
+  });
 
 const createCartSchema = z.object({
     ...cartInput,
@@ -42,11 +70,15 @@ const cartsResponseSchema = z.array(cartResponseSchema)
 export type CreateCartInput = z.infer<typeof createCartSchema>
 
 export const {schemas: cartSchemas, $ref} = buildJsonSchemas({
-    getCartProductSchema,
+    getCartProductsSchema,
+    validateCartBodySchema,
+    addQuantityProductBodySchema,
+    addProductToCartParamsSchema,
     createCartSchema,
     cartResponseSchema,
     cartsResponseSchema,
-    getCartsSchema,
-    removeAllProductsFromCartSchema,
-    validateCartSchema,
+    postCartBodySchema,
+    getCartSchema,
+    removeAllProductsFromCartParamsSchema,
+    validateCartParamsSchema,
 }, { $id: 'CartSchema'})

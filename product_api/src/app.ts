@@ -5,6 +5,8 @@ import cartRoutes from "./modules/cart/cart.route";
 import { cartSchemas } from './modules/cart/cart.schema';
 import productRoutes from "./modules/product/product.route";
 import { productSchemas } from "./modules/product/product.schema";
+import cartItemsRoutes from "./modules/cartItems/cartItems.route";
+import { cartItemsSchemas } from "./modules/cartItems/cartItems.schema";
 
 
 export const server = Fastify({
@@ -46,7 +48,7 @@ server.get('/healthcheck', async function() {
 })
 
 async function main() {
-    for (const schema of [...userSchemas, ...cartSchemas, ...productSchemas]){
+    for (const schema of [...userSchemas, ...cartSchemas, ...productSchemas, ...cartItemsSchemas]){
         server.addSchema(schema)
     }
 
@@ -55,6 +57,8 @@ async function main() {
     server.register(cartRoutes, {prefix: 'api/cart'})
 
     server.register(productRoutes, {prefix: 'api/product'})
+
+    server.register(cartItemsRoutes, {prefix: 'api/cartItems'})
     
     try {
         await server.listen({port: 4001, host: '0.0.0.0'})

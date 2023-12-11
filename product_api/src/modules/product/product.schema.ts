@@ -14,13 +14,14 @@ const productOutput = {
     content: z.string().optional()
 }
 
+export const getAllProductsSchema = z.object({
+    ...productOutput,
+})
+
 const createProductSchema = z.object({
     ...productInput,
 })
 
-const getAllProductsSchema = z.object({
-    ...productOutput,
-})
 
 const productResponseSchema = z.object({
     ...productInput,
