@@ -1,6 +1,6 @@
 import {z} from 'zod'
 import {buildJsonSchemas} from 'fastify-zod'
- 
+
 
 const cartInput = {
     userId: z.number(),
@@ -16,6 +16,14 @@ const getCartProductSchema = z.object({
     productId: z.number()
 })
 
+const removeAllProductsFromCartSchema = z.object({
+    cartId: z.number(),
+})
+
+const validateCartSchema = z.object({
+    cartId: z.number(),
+})
+
 const createCartSchema = z.object({
     ...cartInput,
 })
@@ -25,9 +33,6 @@ const cartResponseSchema = z.object({
     ...cartInput,
 })
 
-const removeProductFromCartSchema = z.object({
-    ...cartInput,
-})
 
 //Permet de renvoyer un tableau en reponse
 const cartsResponseSchema = z.array(cartResponseSchema)
@@ -37,10 +42,11 @@ const cartsResponseSchema = z.array(cartResponseSchema)
 export type CreateCartInput = z.infer<typeof createCartSchema>
 
 export const {schemas: cartSchemas, $ref} = buildJsonSchemas({
-    cartInput,
     getCartProductSchema,
     createCartSchema,
     cartResponseSchema,
     cartsResponseSchema,
     getCartsSchema,
+    removeAllProductsFromCartSchema,
+    validateCartSchema,
 }, { $id: 'CartSchema'})

@@ -1,58 +1,61 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createCart, getAllCarts, addProductToCart, findCartByUserId, removeProductFromCart } from "./cart.service";
+import { createCart, getAllCarts, addProductToCart, removeProductFromCart, removeAllProductsFromCart, validateCart, deleteCart } from "./cart.service";
 import { cartSchemas, CreateCartInput } from "./cart.schema";
+import prisma from "../../utils/prisma";
+import { log } from "console";
 
-
-    // Create Cart
-//     export async function createCartHandler(request: FastifyRequest<{
-//     Body: CreateCartInput
-// }>) {
-
-//     const { userId } = request.body;
-//     const cart = await createCart(userId)
-//     return cart
-// }
-
-// RECUPERER TOUT LES PANIER D'UN USER
+// Get user Cart
 export async function getAllCartsHandler(request: FastifyRequest<{ Params: { userId: number }}>) {
     const { userId } = request.params;
     const carts = await getAllCarts(userId);
-
     return carts;
 }
 
 
-// AJOUTER UN PRODUIT AU PANIER
-export async function addProductToCartHandler(request: FastifyRequest<{ Params: { cartId: number, productId: number }, Body: {userId: number, status: boolean}}>) {
-    let { cartId, productId} = request.params;
-    let {status, userId} = request.body;
-
-        if (status == false) {
+// Add product to Cart
+export async function addProductToCartHandler(request: FastifyRequest<{ Params: { cartId: number, productId: number }, Body: {userId: number }}>) {
+    let { cartId, productId } = request.params;
+    let { userId } = request.body;
+    // Check if cart already open
+    const currentCart = await prisma.cart.findUnique({
+        where: { id: cartId },
+    })
+    // If no cart open, open it
+    if (!currentCart || currentCart.status === false) {        
         const newCart = await createCart(userId)
         cartId = newCart.id;
-        }
-    
-    const cart = await addProductToCart(cartId, productId);
+    }
+    // Add product into cart
+    const cart = await addProductToCart(cartId, productId, userId);
     return cart;
 }
 
+
+// Remove product from cart
 export async function removeProductHandler(request: FastifyRequest<{ Params: { cartId: number, productId: number } }>) {
     let { cartId , productId } = request.params;
-
     return await removeProductFromCart(cartId, productId);
-    
 }
 
 
-// export async function removeAllProductHandler(request: FastifyRequest<{ 
-//     Querystring: { userId: number } }>) {
+// Remove all product from cart
+export async function removeAllProductsHandler(request: FastifyRequest<{ Params: { cartId: number } }>) {
+    let { cartId } = request.params;
+    const products = await removeAllProductsFromCart(cartId);
+    return products;
+}
 
-//     const { userId } = request.query;
-//     const cart = await findCartByUserId(userId);
-//     if (!cart) {
-//         throw new Error('Cart not found for the given user.');
-//     }
-//     const items = await getProductsByCart(cart.id);
-    
-//     return items;
-// }
+
+// Delete Cart
+export async function deleteCartHandler(request: FastifyRequest<{ Params: { cartId: number } }>) {
+    let { cartId } = request.params;
+    const cart = await deleteCart(cartId);
+    return cart;
+}
+
+
+// Validate Cart
+export async function validateCartHandler(request: FastifyRequest<{ Params: { cartId: number }}>) {
+    let { cartId } = request.params;
+    return await validateCart( cartId )
+}

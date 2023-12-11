@@ -10,10 +10,10 @@ export const createProduct = async(data: CreateProductInput & {userId: number}) 
 export async function getAllProducts() {
     return prisma.product.findMany({
         select: {
-            content: true,
+            id: true,
             title: true,
             price: true,
-            id: true,
+            content: true,
         }
     })
 }

@@ -7,19 +7,23 @@ const productInput = {
     content: z.string().optional()
 }
 
-const productGenerated = {
+const productOutput = {
     id: z.number(),
-    createdAt: z.string(),
-    updatedAt: z.string()
+    title: z.string(),
+    price: z.number(),
+    content: z.string().optional()
 }
 
 const createProductSchema = z.object({
     ...productInput,
 })
 
+const getAllProductsSchema = z.object({
+    ...productOutput
+})
+
 const productResponseSchema = z.object({
     ...productInput,
-    ...productGenerated,
 })
 
 const productsResponseSchema = z.array(productResponseSchema)
@@ -27,6 +31,7 @@ const productsResponseSchema = z.array(productResponseSchema)
 export type CreateProductInput = z.infer<typeof createProductSchema>
 
 export const {schemas: productSchemas, $ref} = buildJsonSchemas({
+    getAllProductsSchema,
     createProductSchema,
     productResponseSchema,
     productsResponseSchema
