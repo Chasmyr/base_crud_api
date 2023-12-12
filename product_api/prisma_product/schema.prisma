@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,21 +8,40 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String?
-  password String
-  salt String
-  products Product[]
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String?
+  password  String
+  role      String
+  carts      Cart[]
 }
 
 model Product {
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title String @db.VarChar(255)
-  content String?
-  price Float
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String    @db.VarChar(255)
+  content    String?
+  price      Float
+  cartItems  CartItem[]
+}
+
+model Cart {
+  id       Int        @id @default(autoincrement())
+  status   Boolean
+  userId   Int
+  user     User       @relation(fields: [userId], references: [id])
+  cartItems CartItem[] 
+}
+
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId    Int
+  productId Int
+  quantity  Int      @default(1)
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([cartId, productId])
 }
