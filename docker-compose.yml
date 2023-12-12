@@ -2,8 +2,8 @@ version: "3.7"
 
 services:
   back-product:
-    build:
-      context: ./product_api
+    build: 
+      context: ./
       dockerfile: Dockerfile-back-product
     env_file:
       - ./.env
@@ -11,6 +11,8 @@ services:
       - "4001:4001"
     depends_on:
       - db-product
+    volumes:
+      - ./:/app
 
   db-product:
     image: postgres:latest

@@ -1,8 +1,19 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import userRoutes from "./modules/user/user.route";
-import { userSchemas } from './modules/user/user.schema'
+import { userSchemas } from './modules/user/user.schema';
+import cartRoutes from "./modules/cart/cart.route";
+import { cartSchemas } from './modules/cart/cart.schema';
+import productRoutes from "./modules/product/product.route";
+import { productSchemas } from "./modules/product/product.schema";
+import cartItemsRoutes from "./modules/cartItems/cartItems.route";
+import { cartItemsSchemas } from "./modules/cartItems/cartItems.schema";
 
-export const server = Fastify()
+
+export const server = Fastify({
+    logger: {
+        level: 'info'
+    }
+})
 
 declare module "fastify" {
     export interface FastifyInstance {
@@ -37,15 +48,21 @@ server.get('/healthcheck', async function() {
 })
 
 async function main() {
-    for (const schema of [...userSchemas,]){
+    for (const schema of [...userSchemas, ...cartSchemas, ...productSchemas, ...cartItemsSchemas]){
         server.addSchema(schema)
     }
 
     server.register(userRoutes, {prefix: 'api/users'})
+
+    server.register(cartRoutes, {prefix: 'api/cart'})
+
+    server.register(productRoutes, {prefix: 'api/product'})
+
+    server.register(cartItemsRoutes, {prefix: 'api/cartItems'})
     
     try {
-        await server.listen(4001, '0.0.0.0')
-        console.log('serve rdy at http://localhost:4001')
+        await server.listen({port: 4001, host: '0.0.0.0'})
+            console.log('serve rdy at http://localhost:4001')
     }catch(e) {
         console.error(e)
         process.exit(1)

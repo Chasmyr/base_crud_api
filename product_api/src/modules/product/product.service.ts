@@ -1,25 +1,36 @@
 import prisma from "../../utils/prisma";
 import { CreateProductInput } from "./product.schema";
 
-export async function createProduct(data: CreateProductInput & {ownerId: number}) {
+export const createProduct = async(data: CreateProductInput & {userId: number}) => {
     return prisma.product.create({
         data,
     })
 }
 
-export async function getProducts() {
+export async function getAllProducts() {
     return prisma.product.findMany({
         select: {
-            content: true,
+            id: true,
             title: true,
             price: true,
-            id: true,
-            owner: {
-                select: {
-                    name: true,
-                    id: true
-                }
-            }
+            content: true,
+        }
+    })
+}
+
+export async function getProduct(productId:number) {
+    return prisma.product.findUnique({
+        where: {
+            productId: productId
+        }
+    })
+}
+
+
+export async function removeProduct(productId: number) {
+    return prisma.product.deleted({
+        where: {
+            productId: productId
         }
     })
 }
