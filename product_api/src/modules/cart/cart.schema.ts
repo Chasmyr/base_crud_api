@@ -22,63 +22,45 @@ const getCartSchema = z.object({
 
 // Recuperer info d'un panier
 const getCartProductsSchema = z.object({
+    ...cartInput,
     id: z.number(), 
-    status: z.boolean(),
-    userId: z.number(),
     cartItems: z.array(cartItemSchema),
 })
 
-const addQuantityProductBodySchema = z.object ({
-    quantity: number(),
-})
-
-const addProductToCartParamsSchema = z.object ({
-    cartId: number(),
-    productId: number(),
-})
-
-const removeAllProductsFromCartParamsSchema = z.object({
+const cartIdSchema = z.object({
     cartId: z.number(),
 })
 
-const validateCartParamsSchema = z.object({
-    cartId: z.number(),
+const userIdSchema = z.object({
+    userId: z.number(),
 })
+
 
 const validateCartBodySchema = z.object({
     products: z.array(z.object({
       productId: z.number(),
       quantity: z.number().min(1),
     })),
-  });
+});
 
-const createCartSchema = z.object({
-    ...cartInput,
+const processCartBodySchema = z.object({
+    status: z.boolean(),
 })
-
 
 const cartResponseSchema = z.object({
     ...cartInput,
 })
 
-
-//Permet de renvoyer un tableau en reponse
 const cartsResponseSchema = z.array(cartResponseSchema)
-
-//Signifie que CreateCartInput sera type TS == structure et regle dans createCartSchema
-
-export type CreateCartInput = z.infer<typeof createCartSchema>
 
 export const {schemas: cartSchemas, $ref} = buildJsonSchemas({
     getCartProductsSchema,
+    processCartBodySchema,
     validateCartBodySchema,
-    addQuantityProductBodySchema,
-    addProductToCartParamsSchema,
-    createCartSchema,
     cartResponseSchema,
     cartsResponseSchema,
     postCartBodySchema,
     getCartSchema,
-    removeAllProductsFromCartParamsSchema,
-    validateCartParamsSchema,
+    userIdSchema,
+    cartIdSchema
 }, { $id: 'CartSchema'})

@@ -28,25 +28,46 @@ export const createCart = async (userId: number) => {
 
 //Validate Cart / Go to cart
 export const validateCart = async (userId: number, products: { productId: number; quantity: number}[]) => {
-  // Create Cart
-  const newCart = await prisma.cart.create({
-      data: {
-          userId,
-          status: true,
-      },
-  });
-  // Add Product
-  for (const { productId, quantity } of products) {
-    await prisma.cartItem.create({
-      data: {
-        cartId: newCart.id,
-        productId,
-        quantity,
-      },
+  // Check if cart with true status exist
+  const existingOpenCart = await prisma.cart.findUnique({
+    where: {
+      id: userId,
+      status: true,
+    }
+  })
+  
+  // If not create an populate
+  if (!existingOpenCart) {
+    const newCart = await prisma.cart.create({
+        data: {
+            userId,
+            status: true,
+        },
     });
+    for (const { productId, quantity } of products) {
+      await prisma.cartItem.create({
+        data: {
+          cartId: newCart.id,
+          productId,
+          quantity,
+        },
+      });
+    }
+    return newCart;
+  } else {
+    for (const { productId, quantity } of products) {
+      await prisma.cartItem.create({
+        data: {
+          cartId: cartId,
+          productId,
+          quantity,
+        },
+      });
+    }
+    return newCart;
   }
-  return newCart;
-}
+} 
+
 
 // Remove all product from cart / Back button from cart
 export const deleteAllProductFromCart = async (cartId: number) => {
@@ -59,7 +80,16 @@ export const deleteAllProductFromCart = async (cartId: number) => {
 
 
 // Payment of cart
-
+export const processCart = async (cartId: number, status: boolean) => {
+  await prisma.cart.update({
+    where: {
+      cartId: cartId,
+    },
+    data: {
+      status: false, 
+    }
+  })
+}
 
 
 // Delete Cart

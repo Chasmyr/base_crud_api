@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createCart, getAllCarts, deleteAllProductFromCart, validateCart, deleteCart } from "./cart.service";
+import { createCart, getAllCarts, deleteAllProductFromCart, validateCart, deleteCart, processCart } from "./cart.service";
 import { cartSchemas, CreateCartInput } from "./cart.schema";
 import prisma from "../../utils/prisma";
 import { log } from "console";
@@ -14,23 +14,6 @@ export async function createCartHandler(request: FastifyRequest<{ Body: { userId
 }
 
 
-// Get user Cart
-export async function getAllCartsHandler(request: FastifyRequest<{ Params: { userId: number }}>) {
-    const { userId } = request.params;
-    const carts = await getAllCarts(userId);
-    return carts;
-}
-
-
-// Add product to Cart
-export async function addProductToCartHandler(request: FastifyRequest<{ Params: { cartId: number, productId: number }, Body: {quantity: number }}>) {
-    let { cartId, productId } = request.params;
-    let { quantity } = request.body;
-
-    const cart = await addProductToCart(cartId, productId, quantity);
-    return cart;
-}
-
 //Validate Cart / Add Product to Cart
 export async function validateCartHandler(request: FastifyRequest<{ Params: { cartId: number}, Body:{ products: { productId: number; quantity: number }[]}}>) {
     const { cartId } = request.params; 
@@ -40,13 +23,27 @@ export async function validateCartHandler(request: FastifyRequest<{ Params: { ca
     return cart
 }
 
+// Get All user Cart
+export async function getAllCartsHandler(request: FastifyRequest<{ Params: { userId: number }}>) {
+    const { userId } = request.params;
+    const carts = await getAllCarts(userId);
+    return carts;
+}
 
-//Payment Cart
+
 
 // Remove all product from cart
 export async function deleteAllProductFromCartHandler( request: FastifyRequest<{ Params: { cartId: number } }>) {
     const { cartId } = request.params;
     return deleteAllProductFromCart(cartId);
+}
+
+//Process Cart
+export async function processCartHandler(request : FastifyRequest<{ Params: {cartId: number}, Body: {status: boolean}}>) {
+    const { cartId } = request.params;
+    const { status } = request.body;
+
+    return processCart(cartId, status)
 }
 
 
