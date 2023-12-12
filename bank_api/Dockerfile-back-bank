@@ -5,22 +5,19 @@ RUN apk add --no-cache bash
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY bank_api/package*.json ./
 
 RUN npm install
-
-COPY prisma_bank ./prisma_bank/
-
-COPY .env ./
-
-COPY tsconfig.json ./
 
 COPY . .
 
 # Generate prisma client
-RUN npx prisma generate --schema=prisma_bank/schema.prisma
+RUN npx prisma generate --schema=./bank_api/prisma_bank/schema.prisma
+
+RUN chmod +x ./bank_api/entrypoint_bank.sh
 
 EXPOSE 4002
 
 # defined command to execute app
-CMD ["bash", "entrypoint_bank.sh"]
+CMD ["sh", "./bank_api/entrypoint_bank.sh"]
+

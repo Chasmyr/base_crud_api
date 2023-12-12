@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /app
 
 echo "----------------------------------"
 echo "Waiting Database "
@@ -20,7 +21,7 @@ echo "Migration starting!"
 echo "----------------------------------"
 
 # Run Prisma migrations
-if npx prisma migrate dev --name init --schema=prisma_bank/schema.prisma; then
+if npx prisma migrate dev --name init --schema=bank_api/prisma_bank/schema.prisma; then
   echo "Bank migrations applied successfully."
 else
   echo "Error applying migrations."
@@ -32,7 +33,9 @@ echo "----------------------------------"
 echo "Server is starting..."
 echo "----------------------------------"
 
-yarn dev
+cd bank_api
+
+npm run dev
 
 echo "----------------------------------"
 echo "Server started!"
