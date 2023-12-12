@@ -1,0 +1,29 @@
+TAP version 14
+# Subtest: Post `/api/users/login`
+    1..0
+ok 1 - Post `/api/users/login` # time=70.148ms
+
+# Subtest: given the email and password are correct
+    ok 1 - should be equal
+    ok 2 - should be equal
+    ok 3 - should be equal
+    ok 4 - should be equal
+    ok 5 - should be equal
+    ok 6 - type is number
+    ok 7 - type is number
+    1..7
+ok 2 - given the email and password are correct # time=238.313ms
+
+# Subtest: given the email is not correct
+    ok 1 - should be equal
+    ok 2 - should be equal
+    1..2
+ok 3 - given the email is not correct # time=81.748ms
+
+# Subtest: given the password is not correct
+    ok 1 - should be equal
+    ok 2 - should be equal
+    1..2
+ok 4 - given the password is not correct # time=78.909ms
+
+1..4

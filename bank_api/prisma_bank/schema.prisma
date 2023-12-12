@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL_BANK")
+  url      = env("DATABASE_URL_TEST")
 }
 
 model User {
@@ -15,6 +15,7 @@ model User {
   email String @unique
   firstName String
   lastName String
+  role String
   password String
   salt String
   bankAccounts BankAccount[]
@@ -35,6 +36,8 @@ model CreditCard {
   creditCardNumber String
   expiration String
   cvv Int
+  token String @default("")
+  isActive Boolean @default(false)
   accountLinked BankAccount @relation(fields: [accountId], references: [id])
   accountId Int
   transactions Transaction[]

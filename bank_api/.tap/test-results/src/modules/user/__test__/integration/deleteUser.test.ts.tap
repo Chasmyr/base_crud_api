@@ -1,0 +1,22 @@
+TAP version 14
+# Subtest: DELETE `/api/users/:id`
+    1..0
+ok 1 - DELETE `/api/users/:id` # time=106.985ms
+
+# Subtest: delete a user successfully
+    ok 1 - should be equal
+    1..1
+ok 2 - delete a user successfully # time=316.271ms
+
+# Subtest: fail to delete because the role or the id is incorrect
+    ok 1 - should be equal
+    1..1
+ok 3 - fail to delete because the role or the id is incorrect # time=110.151ms
+
+# Subtest: fail to delete a user because the user dont exist
+    ok 1 - should be equal
+    ok 2 - should be equal
+    1..2
+ok 4 - fail to delete a user because the user dont exist # time=73.638ms
+
+1..4
