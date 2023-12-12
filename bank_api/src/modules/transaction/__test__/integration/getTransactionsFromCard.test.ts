@@ -3,15 +3,16 @@ import { createFakeUser, createFakeBankAccount } from "../../../../utils/testUti
 import buildServer from "../../../../server"
 import prisma from '../../../../utils/prisma'
 
-test('GET `/api/creditcards/`', async (t) => {
+test('GET `/api/transactions/card/:id`', async (t) => {
 
     t.beforeEach(async () => {
+        await prisma.transaction.deleteMany({})
         await prisma.creditCard.deleteMany({})
         await prisma.bankAccount.deleteMany({})
         await prisma.user.deleteMany({})
     })
 
-    test('get all credit cards successfully', async (t) => {
+    test('get all transactions from credit card successfully', async (t) => {
 
         const user = createFakeUser('admin')
         const fastify = buildServer()
@@ -57,30 +58,97 @@ test('GET `/api/creditcards/`', async (t) => {
         const accountId = createBankAccountResponse.json().id
 
         // test le status code
-        const expiration = '09/28'
-        await fastify.inject({
+        const createCreditCardResponse = await fastify.inject({
             method: "POST",
             url: `/api/creditcards/${accountId}`,
             payload: {
-                expiration: expiration
+                expiration: '09/28'
             },
             headers: {
                 authorization: `Bearer ${token}`
             }
         })
 
-        const getCreditCard = await fastify.inject({
+        const creditCardId = createCreditCardResponse.json().id 
+
+        const activatedCreditCard = await fastify.inject({
             method: "GET",
-            url: `/api/creditcards/`,
+            url: `/api/creditcards/activation/${creditCardId}`,
             headers: {
                 authorization: `Bearer ${token}`
             }
         })
 
-        t.equal(getCreditCard.statusCode, 200)
+        const creditCardTokenCrypted = activatedCreditCard.json().token
+
+        const transactionsResponse = await fastify.inject({
+            method: "POST",
+            url: `/api/transactions/`,
+            payload: {
+                payeeName: 'test',
+                payeeId: 'khahrbarjohao',
+                amount: 2.6
+            },
+            headers: {
+                authorization: `Bearer ${creditCardTokenCrypted}`
+            }
+        })
+
+        const getAllFromCredit = await fastify.inject({
+            method: "GET",
+            url: `/api/transactions/card/${creditCardId}`,
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+
+        t.equal(getAllFromCredit.statusCode, 200)
+        const json = getAllFromCredit.json()
+        t.equal(json[0].id, transactionsResponse.json().id)
     })
 
-    test('fail to get all credit cards because the role is incorrect', async (t) => {
+    test('fail to get all transactions from credit card because the credit card is not found', async (t) => {
+
+        
+        const user = createFakeUser('admin')
+        const fastify = buildServer()
+        t.teardown(() => fastify.close())
+
+        const createUserResponse = await fastify.inject({
+            method: "POST",
+            url: '/api/users',
+            payload: {
+                email: user.email,
+                password: user.password,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role
+            }
+        })
+
+        const loginResponse = await fastify.inject({
+            method: "POST",
+            url: '/api/users/login',
+            payload: {
+                email: user.email,
+                password: user.password
+            }
+        })
+
+        const token = loginResponse.json().accessToken
+
+        const getAllFromCredit = await fastify.inject({
+            method: "GET",
+            url: `/api/transactions/card/0`,
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+
+        t.equal(getAllFromCredit.statusCode, 404)
+    })
+
+    test('fail to get all transactions from credit card because user id or the role is incorrect', async (t) => {
 
         const user = createFakeUser('admin')
         const user2 = createFakeUser('client')
@@ -98,7 +166,7 @@ test('GET `/api/creditcards/`', async (t) => {
                 role: user.role
             }
         })
-        await fastify.inject({
+        const createUserResponse2 = await fastify.inject({
             method: "POST",
             url: '/api/users',
             payload: {
@@ -148,7 +216,7 @@ test('GET `/api/creditcards/`', async (t) => {
         const accountId = createBankAccountResponse.json().id
 
         // test le status code
-        await fastify.inject({
+        const createCreditCardResponse = await fastify.inject({
             method: "POST",
             url: `/api/creditcards/${accountId}`,
             payload: {
@@ -159,15 +227,40 @@ test('GET `/api/creditcards/`', async (t) => {
             }
         })
 
-        const getCreditCard = await fastify.inject({
+        const creditCardId = createCreditCardResponse.json().id 
+
+        const activatedCreditCard = await fastify.inject({
             method: "GET",
-            url: `/api/creditcards/}`,
+            url: `/api/creditcards/activation/${creditCardId}`,
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+
+        const creditCardTokenCrypted = activatedCreditCard.json().token
+
+        const transactionsResponse = await fastify.inject({
+            method: "POST",
+            url: `/api/transactions/`,
+            payload: {
+                payeeName: 'test',
+                payeeId: 'khahrbarjohao',
+                amount: 2.6
+            },
+            headers: {
+                authorization: `Bearer ${creditCardTokenCrypted}`
+            }
+        })
+
+        const getAllFromCredit = await fastify.inject({
+            method: "GET",
+            url: `/api/transactions/card/${creditCardId}`,
             headers: {
                 authorization: `Bearer ${token2}`
             }
         })
 
-        t.equal(getCreditCard.statusCode, 500)
+        t.equal(getAllFromCredit.statusCode, 401)
     })
     
 })

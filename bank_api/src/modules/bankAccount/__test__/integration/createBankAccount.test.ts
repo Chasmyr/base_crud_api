@@ -14,6 +14,7 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
         // créer un user
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
@@ -65,6 +66,7 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
         // créer un user
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
@@ -112,6 +114,7 @@ test('POST `/api/bankaccounts/:id`', async (t) => {
         // créer un user
         const user = createFakeUser('client')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",

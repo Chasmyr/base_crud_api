@@ -14,6 +14,7 @@ test('DELETE `/api/bankaccounts/:id`', async (t) => {
         // créer un user
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
@@ -72,6 +73,7 @@ test('DELETE `/api/bankaccounts/:id`', async (t) => {
        // créer un user
        const user = createFakeUser('admin')
        const fastify = buildServer()
+       t.teardown(() => fastify.close())
 
        const createUserResponse = await fastify.inject({
            method: "POST",
@@ -129,6 +131,7 @@ test('DELETE `/api/bankaccounts/:id`', async (t) => {
         const user = createFakeUser('client')
         const user2 = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",

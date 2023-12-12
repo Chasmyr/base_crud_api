@@ -16,6 +16,7 @@ test('credit card credentials are`', async (t) => {
 
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
@@ -81,6 +82,7 @@ test('credit card credentials are`', async (t) => {
 
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",

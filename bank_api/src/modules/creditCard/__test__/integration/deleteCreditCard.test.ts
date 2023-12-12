@@ -16,6 +16,8 @@ test('DELETE `/api/creditcards/:id`', async (t) => {
         const user = createFakeUser('admin')
         const fastify = buildServer()
 
+        t.teardown(() => fastify.close())
+
         const createUserResponse = await fastify.inject({
             method: "POST",
             url: '/api/users',
@@ -77,6 +79,7 @@ test('DELETE `/api/creditcards/:id`', async (t) => {
             }
         })
 
+        const json = deleteCreditCardResponse.json()
         t.equal(deleteCreditCardResponse.statusCode, 200)
     })
 
@@ -84,6 +87,8 @@ test('DELETE `/api/creditcards/:id`', async (t) => {
 
         const user = createFakeUser('admin')
         const fastify = buildServer()
+
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
@@ -139,6 +144,8 @@ test('DELETE `/api/creditcards/:id`', async (t) => {
         const user = createFakeUser('admin')
         const user2 = createFakeUser('client')
         const fastify = buildServer()
+
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",

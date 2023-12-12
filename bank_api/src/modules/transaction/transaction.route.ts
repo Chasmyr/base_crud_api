@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify/types/instance";
-import { createTransactionHandler, getTransactionsHandler } from "./transaction.controller";
+import { createTransactionHandler, getAllTransactionsFormCreditCard, getAllTransactionsFromBankAccount, getAllTransactionsFromUser } from "./transaction.controller";
 import { $ref } from "./transaction.schema";
 
 async function transactionRoutes(server: FastifyInstance) {
@@ -15,13 +15,17 @@ async function transactionRoutes(server: FastifyInstance) {
         }
     }, createTransactionHandler)
 
-    server.get('/all', {
-        schema: {
-            response: {
-                200: $ref('transactionsResponseSchema')
-            }
-        }
-    }, getTransactionsHandler)
+    server.get('/card/:id', {
+        preHandler: [server.authenticate],
+    }, getAllTransactionsFormCreditCard)
+
+    server.get('/bankaccount/:id', {
+        preHandler: [server.authenticate],
+    }, getAllTransactionsFromBankAccount)
+
+    server.get('/', {
+        preHandler: [server.authenticate],
+    }, getAllTransactionsFromUser)
 }
 
 export default transactionRoutes

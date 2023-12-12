@@ -3,6 +3,6 @@ TAP version 14
     ok 1 - should be equal
     ok 2 - should be equivalent
     1..2
-ok 1 - requests the `/healthcheck` route # time=294.196ms
+ok 1 - requests the `/healthcheck` route # time=306.907ms
 
 1..1

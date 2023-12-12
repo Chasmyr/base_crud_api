@@ -14,6 +14,7 @@ test('GET `/api/bankaccounts/`', async (t) => {
         // créer un user
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",

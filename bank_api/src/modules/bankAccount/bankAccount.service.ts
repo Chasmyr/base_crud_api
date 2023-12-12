@@ -31,7 +31,7 @@ export async function updateBankAccount(id: number, body: BankAccountUpdateSchem
 // get one bank account
 export async function getBankAccount(id: number) {
 
-    const bankAccount = await prisma.bankAccount.findUnique({
+    const bankAccount = await prisma.bankAccount.findFirst({
         where: {id: id}
     })
 

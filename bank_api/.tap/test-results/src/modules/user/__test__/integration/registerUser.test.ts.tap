@@ -1,7 +1,7 @@
 TAP version 14
 # Subtest: POST `/api/users`
     1..0
-ok 1 - POST `/api/users` # time=75.896ms
+ok 1 - POST `/api/users` # time=153.075ms
 
 # Subtest: create user successfully with mock createUser
     ok 1 - should be equal
@@ -12,7 +12,7 @@ ok 1 - POST `/api/users` # time=75.896ms
     ok 6 - should be equal
     ok 7 - should be equal
     1..7
-ok 2 - create user successfully with mock createUser # time=230.546ms
+ok 2 - create user successfully with mock createUser # time=304.386ms
 
 # Subtest: create user successfully with test database
     ok 1 - should be equal
@@ -23,12 +23,12 @@ ok 2 - create user successfully with mock createUser # time=230.546ms
     ok 6 - should be equal
     ok 7 - type is number
     1..7
-ok 3 - create user successfully with test database # time=126.567ms
+ok 3 - create user successfully with test database # time=139.692ms
 
 # Subtest: fail to create a user
     ok 1 - should be equal
     ok 2 - should be equal
     1..2
-ok 4 - fail to create a user # time=64.293ms
+ok 4 - fail to create a user # time=82.278ms
 
 1..4

@@ -16,6 +16,7 @@ test('POST `/api/transactions/`', async (t) => {
 
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
@@ -79,14 +80,6 @@ test('POST `/api/transactions/`', async (t) => {
         })
 
         const creditCardTokenCrypted = activatedCreditCard.json().token
-        // TODO - ajouter le decryptage du token et un test la dessus 
-        test('the token can be decrypted', async (t) => {
-
-        })
-
-        test('the token cant be decrypted', async (t) => {
-
-        })
 
         const createTransactionResponse = await fastify.inject({
             method: "POST",
@@ -101,7 +94,28 @@ test('POST `/api/transactions/`', async (t) => {
             }
         })
 
-        console.log(createTransactionResponse.json())
+        t.equal(createTransactionResponse.statusCode, 201)
+        const json = createTransactionResponse.json()
+        t.equal(json.amount, 2.6)
+        t.equal(json.payeeName, 'test')
+    })
+
+    test('fail to create a transaction because there isnt jwt token ', async (t) => {
+
+        const fastify = buildServer()
+        t.teardown(() => fastify.close())
+
+        const createTransactionResponse = await fastify.inject({
+            method: "POST",
+            url: `/api/transactions/`,
+            payload: {
+                payeeName: 'test',
+                payeeId: 'khahrbarjohao',
+                amount: 2.6
+            }
+        })
+
+        t.equal(createTransactionResponse.statusCode, 401)
     })
     
 })

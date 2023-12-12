@@ -15,6 +15,7 @@ test('GET `/api/creditcards/:id`', async (t) => {
 
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
@@ -87,6 +88,7 @@ test('GET `/api/creditcards/:id`', async (t) => {
 
         const user = createFakeUser('admin')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
@@ -128,6 +130,7 @@ test('GET `/api/creditcards/:id`', async (t) => {
         const user = createFakeUser('admin')
         const user2 = createFakeUser('client')
         const fastify = buildServer()
+        t.teardown(() => fastify.close())
 
         const createUserResponse = await fastify.inject({
             method: "POST",
