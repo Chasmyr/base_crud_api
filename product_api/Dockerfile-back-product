@@ -1,0 +1,23 @@
+FROM node:18-alpine3.16
+
+RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache bash
+
+WORKDIR /app
+
+COPY product_api/package*.json ./
+
+RUN npm install
+
+COPY . .
+
+# Generate prisma client
+RUN npx prisma generate --schema=./product_api/prisma_product/schema.prisma
+
+RUN chmod +x ./product_api/entrypoint_product.sh
+
+EXPOSE 4001
+
+# defined command to execute app
+CMD ["sh", "./product_api/entrypoint_product.sh"]
+ 

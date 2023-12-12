@@ -3,8 +3,8 @@ version: "3.7"
 services:
   back-product:
     build: 
-      context: ./
-      dockerfile: Dockerfile-back-product
+      context: .
+      dockerfile: ./product_api/Dockerfile-back-product
     env_file:
       - ./.env
     ports:
@@ -27,15 +27,15 @@ services:
 
   back-bank:
     build:
-      context: ./bank_api
-      dockerfile: Dockerfile-back-bank
+      context: .
+      dockerfile: ./bank_api/Dockerfile-back-bank
     env_file:
       - .env
     ports:
       - "4002:4002"
     depends_on:
       - db-bank
-      - db-test
+      # - db-test
 
   db-bank:
     image: postgres:latest
@@ -48,16 +48,16 @@ services:
     ports:
       - "5002:5432"
 
-  db-test:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: ${PGUSER}
-      POSTGRES_PASSWORD: ${PGPASSWORD}
-      POSTGRES_DB: ${PGDATABASETEST}
-    volumes:
-      - ./:/data/db-test
-    ports:
-      - "5003:5432"
+  # db-test:
+  #   image: postgres:latest
+  #   environment:
+  #     POSTGRES_USER: ${PGUSER}
+  #     POSTGRES_PASSWORD: ${PGPASSWORD}
+  #     POSTGRES_DB: ${PGDATABASETEST}
+  #   volumes:
+  #     - ./:/data/db-test
+  #   ports:
+  #     - "5003:5432"
 
 # networks:
 #   postgres:

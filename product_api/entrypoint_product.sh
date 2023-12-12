@@ -14,6 +14,7 @@ done
 
 echo ----------------------------------
 echo "Database is ready!"
+echo ----------------------------------
 
 echo ----------------------------------
 echo "Migration starting!"
@@ -30,6 +31,8 @@ fi
 echo ----------------------------------
 echo "Server is starting..."
 echo ----------------------------------
+
+cd product_api
 
 npm run dev
 
